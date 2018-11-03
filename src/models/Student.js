@@ -9,7 +9,9 @@ export default class Student {
     major,
     gpa,
     about,
-    skills
+    skills,
+    liked = [],
+    disliked = [],
   ) {
     this.uid = uid;
     this.name = name;
@@ -21,8 +23,8 @@ export default class Student {
     this.gpa = gpa;
     this.about = about;
     this.skills = skills;
-    this.liked = [];
-    this.disliked = [];
+    this.liked = liked;
+    this.disliked = disliked;
   }
 
   getName() {

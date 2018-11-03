@@ -15,6 +15,7 @@ export default class Login extends Component {
   selectButton = index => {
     if (index === 0) {
 
+      Actions.LoginForm();
       // Go to sign up
     } else {
       Actions.SignUpFormGeneric();

@@ -9,7 +9,9 @@ export default class Recruiter {
     companyAddress,
     companyDescription,
     industry,
-    positionsAvailable
+    positionsAvailable,
+    liked = [],
+    disliked = [],
   ) {
     this.uid = uid;
     this.name = name;
@@ -21,8 +23,8 @@ export default class Recruiter {
     this.companyDescription = companyDescription;
     this.industry = industry;
     this.positionsAvailable = positionsAvailable;
-    this.liked = [];
-    this.disliked = [];
+    this.liked = liked;
+    this.disliked = disliked;
   }
 
   getName() {
