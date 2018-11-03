@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Picker } from "react-native";
+import { Text, View, Picker, KeyboardAvoidingView } from "react-native";
 import {
   SearchBar,
   FormLabel,
@@ -7,6 +7,7 @@ import {
   FormValidationMessage,
   ButtonGroup
 } from "react-native-elements";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 let nationalSchools = [
   "Amherst",
@@ -49,39 +50,44 @@ export default class SignUpFormStudent extends Component {
     return (
       <View>
         <SearchBar
+          showLoading
           placeholder="Search For School"
           onChangeText={this.renderSearchedSchools.bind(this)}
         />
-        <Picker style={{ width: 300, alignSelf: "center" }}>
-          {this.renderLabels(this.state.schools)}
-        </Picker>
-        <FormLabel>Major</FormLabel>
-        <FormInput
-          onChangeText={e => {
-            console.log(e);
-          }}
-        />
-        <FormLabel>GPA</FormLabel>
-        <FormInput
-          keyboardType="numeric"
-          onChangeText={e => {
-            console.log(e);
-          }}
-        />
-        <FormLabel>About</FormLabel>
-        <FormInput
-          keyboardType="numeric"
-          onChangeText={e => {
-            console.log(e);
-          }}
-        />
-        <FormLabel>Skills</FormLabel>
-        <FormInput
-          keyboardType="numeric"
-          onChangeText={e => {
-            console.log(e);
-          }}
-        />
+
+        <KeyboardAwareScrollView
+          resetScrollToCoords={{ x: 0, y: 0 }}
+          scrollEnabled={true}
+        >
+          <Picker style={{ width: 300, alignSelf: "center" }}>
+            {this.renderLabels(this.state.schools)}
+          </Picker>
+          <FormLabel>Major</FormLabel>
+          <FormInput
+            onChangeText={e => {
+              console.log(e);
+            }}
+          />
+          <FormLabel>GPA</FormLabel>
+          <FormInput
+            keyboardType="numeric"
+            onChangeText={e => {
+              console.log(e);
+            }}
+          />
+          <FormLabel>About</FormLabel>
+          <FormInput
+            onChangeText={e => {
+              console.log(e);
+            }}
+          />
+          <FormLabel>Skills</FormLabel>
+          <FormInput
+            onChangeText={e => {
+              console.log(e);
+            }}
+          />
+        </KeyboardAwareScrollView>
       </View>
     );
   }
