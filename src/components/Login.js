@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { Platform } from "react-native";
-import {
-  View,
-  Text,
-  ButtonGroup,
-} from "../common/shared-components";
+import { View, Text, ButtonGroup } from "../common/shared-components";
 import { Dimensions } from "react-native";
 
 const screeWidth = Dimensions.get("window").width;
@@ -41,20 +37,20 @@ export default class Login extends Component {
 
 const styles = {
   container: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingTop: 20,
     paddingBottom: 20,
-    height: screenHeight,
+    height: screenHeight
   },
   mainView: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    alignItems: "center",
+    justifyContent: "space-around"
   },
   loginButtons: {
     height: 100,
-    width: '100%',
+    width: "100%"
   }
 };
