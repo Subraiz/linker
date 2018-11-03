@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Platform } from "react-native";
+import { Actions } from "react-native-router-flux";
 import {
   View,
   Text,
@@ -13,8 +14,10 @@ const screenHeight = Dimensions.get("window").height;
 export default class Login extends Component {
   selectButton = index => {
     if (index === 0) {
-      // Go to login
+
+      // Go to sign up
     } else {
+      Actions.SignUpFormGeneric();
       // Go to sign up
     }
   };
@@ -46,17 +49,17 @@ export default class Login extends Component {
 
 const styles = {
   container: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingTop: 20,
     paddingBottom: 20,
-    height: screenHeight,
+    height: screenHeight
   },
   mainView: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    alignItems: "center",
+    justifyContent: "space-around"
   },
   buttonsContainer: {
     flexDirection: 'row',

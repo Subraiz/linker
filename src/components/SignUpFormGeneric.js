@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, Switch } from "react-native";
+import { Actions } from "react-native-router-flux";
 import {
   FormLabel,
   FormInput,
@@ -10,7 +11,7 @@ import { TouchableOpacity } from "../common/shared-components";
 export default class SignUpFormGeneric extends Component {
   selectButton = index => {
     if (index == 0) {
-      // Go to student sign up
+      Actions.SignUpFormStudent();
     } else {
       // Go to recruiter sign up
     }
