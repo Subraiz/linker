@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { Text, View, SafeAreaView } from "react-native";
+import ReduxThunk from "redux-thunk";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import reducers from "./src/reducers";
 import firebase from "@firebase/app";
 import firestore from "@firebase/firestore";
+import Router from "./src/Router.js";
 
 export default class App extends Component {
   componentWillMount() {
@@ -17,10 +22,11 @@ export default class App extends Component {
   }
 
   render() {
+    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
     return (
-      <SafeAreaView>
-        <Text>Open up App.js to start working on your app!</Text>
-      </SafeAreaView>
+      <Provider store={store}>
+        <Router />
+      </Provider>
     );
   }
 }
