@@ -6,7 +6,7 @@ import { createStore, applyMiddleware } from "redux";
 import reducers from "./src/reducers";
 import firebase from "@firebase/app";
 import firestore from "@firebase/firestore";
-import Router from "./src/Router.js";
+import Router from "./src/Router";
 import Login from "./src/components/Login";
 
 export default class App extends Component {
@@ -25,11 +25,9 @@ export default class App extends Component {
   render() {
     const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
     return (
-      <SafeAreaView>
-        <Provider store={store}>
-          <Login />
-        </Provider>
-      </SafeAreaView>
+      <Provider store={store}>
+        <Router />
+      </Provider>
     );
   }
 }
