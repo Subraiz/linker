@@ -1,5 +1,14 @@
 import React, { Component } from "react";
-import { Text, View, Picker, KeyboardAvoidingView } from "react-native";
+import {
+  Text,
+  View,
+  Picker,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  LayoutAnimation,
+  UIManager,
+  ScrollView
+} from "react-native";
 import {
   SearchBar,
   FormLabel,
@@ -26,8 +35,28 @@ nationalSchools = nationalSchools.sort();
 
 export default class SignUpFormStudent extends Component {
   state = {
-    schools: nationalSchools
+    schools: nationalSchools,
+    skills: [],
+    skillTitle: ""
   };
+
+  updatedSkills(text) {
+    this.setState({ skillTitle: text });
+
+    let updatedSkills = [];
+    text.trim();
+    if (text.substring(text.length - 1) == ",") {
+      updatedSkills = this.state.skills;
+      updatedSkills.push(this.state.skillTitle);
+      this.setState({ skills: updatedSkills, skillTitle: "" });
+    }
+  }
+
+  componentDidUpdate(props) {
+    UIManager.setLayoutAnimationEnabledExperimental &&
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    LayoutAnimation.spring();
+  }
 
   renderSearchedSchools(e) {
     let newSchools = [];
@@ -46,9 +75,29 @@ export default class SignUpFormStudent extends Component {
     });
   }
 
+  removeSkill(i) {
+    let updatedPositions = this.state.skills.splice(i, 1);
+    this.setState(updatedPositions);
+  }
+
+  renderSkills() {
+    return this.state.skills.map((position, i) => {
+      return (
+        <TouchableOpacity
+          key={position}
+          onLongPress={this.removeSkill.bind(this, i)}
+        >
+          <View style={styles.skillContainer}>
+            <Text>{position}</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    });
+  }
+
   render() {
     return (
-      <View>
+      <ScrollView style={styles.containerStyle}>
         <SearchBar
           showLoading
           placeholder="Search For School"
@@ -81,14 +130,56 @@ export default class SignUpFormStudent extends Component {
               console.log(e);
             }}
           />
-          <FormLabel>Skills</FormLabel>
+          <FormLabel>Skills (Seperated By Commas)</FormLabel>
           <FormInput
-            onChangeText={e => {
-              console.log(e);
-            }}
+            value={this.state.skillTitle}
+            onChangeText={this.updatedSkills.bind(this)}
           />
+          <View style={styles.skillsViewContainer}>{this.renderSkills()}</View>
         </KeyboardAwareScrollView>
-      </View>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity onPress={this.loginButton} style={styles.button}>
+            <Text style={styles.buttonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     );
   }
 }
+
+const styles = {
+  containerStyle: {
+    height: "auto"
+  },
+  skillsViewContainer: { margin: 10 },
+  skillContainer: {
+    marginTop: 5,
+    backgroundColor: "white",
+    height: "auto",
+    width: 100,
+    padding: 7,
+    shadowOffset: { width: 0.2, height: 0.2 },
+    shadowColor: "black",
+    shadowOpacity: 0.1,
+    alignItems: "center"
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    margin: 5
+  },
+  button: {
+    flex: 1,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "rgb(45, 45, 128)",
+
+    alignItems: "center",
+    margin: 5,
+    padding: 10,
+    backgroundColor: "rgba(45, 45, 128, 0)"
+  },
+  buttonText: {
+    color: "#000"
+  }
+};

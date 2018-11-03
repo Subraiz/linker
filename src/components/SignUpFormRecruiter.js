@@ -33,6 +33,7 @@ export default class SignUpFormStudent extends Component {
     this.setState({ positionTitle: text });
 
     let updatedPositions = [];
+    text.trim();
     if (text.substring(text.length - 1) == ",") {
       updatedPositions = this.state.positions;
       updatedPositions.push(this.state.positionTitle);
@@ -101,6 +102,11 @@ export default class SignUpFormStudent extends Component {
             {this.renderPositions()}
           </View>
         </KeyboardAwareScrollView>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity onPress={this.loginButton} style={styles.button}>
+            <Text style={styles.buttonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -114,9 +120,28 @@ const styles = {
     height: "auto",
     width: 100,
     padding: 7,
-    shadowOffset: { width: 2, height: 1 },
+    shadowOffset: { width: 0.2, height: 0.2 },
     shadowColor: "black",
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.1,
     alignItems: "center"
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    margin: 5
+  },
+  button: {
+    flex: 1,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: "rgb(45, 45, 128)",
+
+    alignItems: "center",
+    margin: 5,
+    padding: 10,
+    backgroundColor: "rgba(45, 45, 128, 0)"
+  },
+  buttonText: {
+    color: "#000"
   }
 };
