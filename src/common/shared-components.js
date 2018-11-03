@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import { View as RView, Text as RText } from "react-native";
 import {
-  ButtonGroup as RNEButtonGroup,
+  View as RView,
+  Text as RText,
+  TouchableOpacity as RTouchableOpacity,
+} from "react-native";
+import {
   FormLabel as RFormLabel,
   FormInput as RFormInput,
   FormValidationMessage as RFormValidationMessage
@@ -9,8 +12,14 @@ import {
 
 export const View = props => <RView {...props}>{props.children}</RView>;
 
+export const TouchableOpacity = props => <RTouchableOpacity {...props}>{props.children}</RTouchableOpacity>;
+
 export const ButtonGroup = props => (
-  <RNEButtonGroup {...props}>{props.children}</RNEButtonGroup>
+  <RButtonGroup {...props}>{props.children}</RButtonGroup>
+);
+
+export const Button = props => (
+  <RButton {...props}>{props.children}</RButton>
 );
 
 export const FormLabel = props => {

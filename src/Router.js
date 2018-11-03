@@ -9,7 +9,7 @@ const RouterComponent = () => {
   return (
     <Router>
       <Scene key="root">
-        <Scene key="Login" component={Login} hideNavBar />
+        <Scene key="Login" initial component={Login} hideNavBar />
         <Scene
           key="SignUpFormGeneric"
           component={SignUpFormGeneric}
@@ -19,12 +19,15 @@ const RouterComponent = () => {
           key="SignUpFormStudent"
           component={SignUpFormStudent}
           title="Student"
+<<<<<<< HEAD
         />
         <Scene
           key="SignUpFormStudent"
           component={SignUpFormStudent}
           title="Student"
           initial
+=======
+>>>>>>> e7cb74970af590a8483be2cae38449af1a2ebcdf
         />
       </Scene>
     </Router>

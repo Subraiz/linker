@@ -1,6 +1,11 @@
 import React, { Component } from "react";
 import { Platform } from "react-native";
-import { View, Text, ButtonGroup } from "../common/shared-components";
+import { Actions } from "react-native-router-flux";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+} from "../common/shared-components";
 import { Dimensions } from "react-native";
 
 const screeWidth = Dimensions.get("window").width;
@@ -9,8 +14,10 @@ const screenHeight = Dimensions.get("window").height;
 export default class Login extends Component {
   selectButton = index => {
     if (index === 0) {
-      // Go to login
+
+      // Go to sign up
     } else {
+      Actions.SignUpFormGeneric();
       // Go to sign up
     }
   };
@@ -21,14 +28,19 @@ export default class Login extends Component {
         <View style={styles.mainView}>
           <Text>Linker</Text>
         </View>
-        <View style={styles.loginButtons}>
-          <ButtonGroup
-            onPress={this.selectButton}
-            buttons={["Login", "Signup"]}
-            innerBorderStyle={{ width: 10, color: "#fff" }}
-            containerBorderRadius={0}
-            containerStyle={{ height: 100, borderWidth: 0 }}
-          />
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            onPress={() => {this.selectButton(0);}}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {this.selectButton(1);}}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Signup</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -49,8 +61,18 @@ const styles = {
     alignItems: "center",
     justifyContent: "space-around"
   },
-  loginButtons: {
-    height: 100,
-    width: "100%"
-  }
+  buttonsContainer: {
+    flexDirection: 'row',
+    margin: 5,
+  },
+  button: {
+    flex: 1,
+    alignItems: 'center',
+    margin: 5,
+    padding: 30,
+    backgroundColor: '#fff',
+  },
+  buttonText: {
+    color: '#000',
+  },
 };
