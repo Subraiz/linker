@@ -1,14 +1,18 @@
 import React, { Component } from "react";
-import { View as RView } from "react-native";
+import {
+  View as RView,
+  Text as RText,
+} from "react-native";
 import { ButtonGroup as RNEButtonGroup } from "react-native-elements";
 
-const View = props => <RView {...props}>{props.children}</RView>;
-
-const ButtonGroup = props => (
-  <RNEButtonGroup {...props}>{prop.children}</RNEButtonGroup>
+export const View = props => (
+  <RView {...props}>{props.children}</RView>
 );
 
-export default {
-  View,
-  ButtonGroup
-};
+export const Text = props => (
+  <RText {...props}>{props.children}</RText>
+);
+
+export const ButtonGroup = props => (
+  <RNEButtonGroup {...props}>{props.children}</RNEButtonGroup>
+);
