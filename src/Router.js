@@ -19,15 +19,11 @@ const RouterComponent = () => {
           key="SignUpFormStudent"
           component={SignUpFormStudent}
           title="Student"
-<<<<<<< HEAD
         />
         <Scene
-          key="SignUpFormStudent"
-          component={SignUpFormStudent}
-          title="Student"
-          initial
-=======
->>>>>>> e7cb74970af590a8483be2cae38449af1a2ebcdf
+          key="SignUpFormRecruiter"
+          component={SignUpFormRecruiter}
+          title="Recruiter"
         />
       </Scene>
     </Router>

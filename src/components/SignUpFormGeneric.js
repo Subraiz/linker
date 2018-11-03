@@ -1,19 +1,25 @@
 import React, { Component } from "react";
-import { Text, View, Switch } from "react-native";
+import { Text, View, LayoutAnimation, UIManager } from "react-native";
 import { Actions } from "react-native-router-flux";
 import {
   FormLabel,
   FormInput,
-  FormValidationMessage,
+  FormValidationMessage
 } from "react-native-elements";
 import { TouchableOpacity } from "../common/shared-components";
 
 export default class SignUpFormGeneric extends Component {
+  componentDidUpdate() {
+    UIManager.setLayoutAnimationEnabledExperimental &&
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    LayoutAnimation.spring();
+  }
+
   selectButton = index => {
     if (index == 0) {
       Actions.SignUpFormStudent();
     } else {
-      // Go to recruiter sign up
+      Actions.SignUpFormRecruiter();
     }
   };
 
@@ -44,13 +50,17 @@ export default class SignUpFormGeneric extends Component {
         </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
-            onPress={() => {this.selectButton(0);}}
+            onPress={() => {
+              this.selectButton(0);
+            }}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Student</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {this.selectButton(1);}}
+            onPress={() => {
+              this.selectButton(1);
+            }}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Recruiter</Text>
@@ -63,18 +73,18 @@ export default class SignUpFormGeneric extends Component {
 
 const styles = {
   buttonsContainer: {
-    flexDirection: 'row',
-    margin: 5,
+    flexDirection: "row",
+    margin: 5
   },
   button: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     margin: 5,
     padding: 30,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff"
   },
   buttonText: {
-    color: '#000',
+    color: "#000"
   },
   selectMessageContainer: {
     display: "flex",
