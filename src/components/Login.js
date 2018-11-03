@@ -1,24 +1,27 @@
 import React, { Component } from "react";
-import {
-  View,
-  ButtonGroup
-} from "../common/shared-components";
+import { Platform } from "react-native";
+// import { View, ButtonGroup } from "../common/shared-components";
+import { View, Dimensions } from "react-native";
+import { ButtonGroup } from "react-native-elements";
 
-class Login extends Component {
-  selectButton = (index) => {
+const screeWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
+
+export default class Login extends Component {
+  selectButton = index => {
     if (index === 0) {
       // Go to login
     } else {
       // Go to sign up
     }
-  }
+  };
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.loginButtons}>
           <ButtonGroup
             onPress={this.selectButton}
-            buttons={['Login', 'Signup']}
+            buttons={["Login", "Signup"]}
             containerStyle={{ height: 60 }}
           />
         </View>
@@ -29,18 +32,17 @@ class Login extends Component {
 
 const styles = {
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: ( Platform.OS == 'ios' ) ? 20 : 0,
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    paddingTop: Platform.OS == "ios" ? 20 : 0,
+    height: screenHeight,
+    paddingBottom: 20
   },
   loginButtons: {
-    width: '100%', 
-    height: 50, 
-    backgroundColor: '#FF9800', 
-    justifyContent: 'center', 
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 0
-  },
+    width: "100%",
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center"
+  }
 };
