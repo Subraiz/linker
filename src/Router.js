@@ -3,6 +3,7 @@ import { Scene, Router, Actions } from "react-native-router-flux";
 import Login from "./components/Login";
 import SignUpFormGeneric from "./components/SignUpFormGeneric";
 import SignUpFormStudent from "./components/SignUpFormStudent";
+import SignUpFormRecruiter from "./components/SignUpFormRecruiter";
 
 const RouterComponent = () => {
   return (
@@ -13,6 +14,11 @@ const RouterComponent = () => {
           key="SignUpFormGeneric"
           component={SignUpFormGeneric}
           title="Sign Up"
+        />
+        <Scene
+          key="SignUpFormStudent"
+          component={SignUpFormStudent}
+          title="Student"
         />
         <Scene
           key="SignUpFormStudent"
