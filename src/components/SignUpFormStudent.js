@@ -41,21 +41,22 @@ class SignUpFormStudent extends Component {
   state = {
     schools: nationalSchools,
     skills: [],
-    skillTitle: ""
+    skillTitle: "",
+    errors: {}
   };
 
   submitButton() {
     let errors = {};
     let errored = false;
-    
-    if (!this.props.school|| this.props.school.length < 4) {
+
+    if (!this.props.school || this.props.school.length < 4) {
       errors.name = "Please select a valid school!";
       errored = true;
     }
-    
-    if (!this.props.gpa|| this.props.gpa.length || isNaN(this.props.gpa)) {
-        errors.gpa = "Please provide a valid gpa!";
-        errored = true;
+
+    if (!this.props.gpa || this.props.gpa.length || isNaN(this.props.gpa)) {
+      errors.gpa = "Please provide a valid gpa!";
+      errored = true;
     } else {
       let gpa = Number(this.props.gpa);
       if (gpa > 5 || gpa < 1) {
@@ -63,18 +64,18 @@ class SignUpFormStudent extends Component {
         errored = true;
       }
     }
-    
-    if (!this.props.major|| this.props.major.length < 2) {
+
+    if (!this.props.major || this.props.major.length < 2) {
       errors.major = "Please provide a valid major!";
       errored = true;
     }
-    
-    if (!this.props.email|| this.props.email.length < 6) {
+
+    if (!this.props.email || this.props.email.length < 6) {
       errors.email = "Please provide a valid email!";
       errored = true;
     }
-    
-    if (!this.props.about|| this.props.about.length < 20) {
+
+    if (!this.props.about || this.props.about.length < 20) {
       errors.about = "Please provide a valid description!";
       errored = true;
     }

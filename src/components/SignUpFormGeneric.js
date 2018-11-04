@@ -1,11 +1,16 @@
 import React, { Component } from "react";
-import { Text, View, LayoutAnimation, UIManager } from "react-native";
+import {
+  Text,
+  View,
+  LayoutAnimation,
+  UIManager,
+  TouchableOpacity
+} from "react-native";
 import { Actions } from "react-native-router-flux";
 import {
   FormLabel,
   FormInput,
-  FormValidationMessage,
-  TouchableOpacity,
+  FormValidationMessage
 } from "react-native-elements";
 import Error from "../common/Error";
 import { connect } from "react-redux";
@@ -18,26 +23,72 @@ class SignUpFormGeneric extends Component {
     errors: {}
   };
 
-  componentDidUpdate() {
-    UIManager.setLayoutAnimationEnabledExperimental &&
-      UIManager.setLayoutAnimationEnabledExperimental(true);
-    LayoutAnimation.spring();
+  renderButtons() {
+    if (
+      this.props.name == "" ||
+      this.props.email == "" ||
+      this.props.password == ""
+    ) {
+      return (
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            disabled={true}
+            onPress={() => {
+              this.selectButton(0);
+            }}
+            style={styles.buttonDisabled}
+          >
+            <Text style={styles.buttonText}>Student</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            disabled={true}
+            onPress={() => {
+              this.selectButton(1);
+            }}
+            style={styles.buttonDisabled}
+          >
+            <Text style={styles.buttonText}>Recruiter</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              this.selectButton(0);
+            }}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Student</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this.selectButton(1);
+            }}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Recruiter</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
   }
 
   selectButton = index => {
     let errors = {};
     let errored = false;
-    
+
     if (!this.props.name || this.props.name.length < 4) {
       errors.name = "Please provid ea valid name!";
       errored = true;
     }
-    
+
     if (!this.props.email || this.props.email.length < 6) {
       errors.email = "Please provide a valid email!";
       errored = true;
     }
-    
+
     if (!this.props.password) {
       errors.password = "Please provide a password!";
       errored = true;
@@ -88,24 +139,7 @@ class SignUpFormGeneric extends Component {
         <View style={styles.selectMessageContainer}>
           <Text style={styles.selectMessage}>I am a...</Text>
         </View>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              this.selectButton(0);
-            }}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Student</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              this.selectButton(1);
-            }}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>Recruiter</Text>
-          </TouchableOpacity>
-        </View>
+        {this.renderButtons()}
       </View>
     );
   }
@@ -155,6 +189,16 @@ const styles = {
   },
   selectMessage: {
     fontSize: 20
+  },
+  buttonDisabled: {
+    flex: 1,
+    alignItems: "center",
+    margin: 5,
+    padding: 30,
+    backgroundColor: "grey",
+    shadowOffset: { width: 1, height: 2 },
+    shadowColor: "navy",
+    shadowOpacity: 0.7
   }
 };
 

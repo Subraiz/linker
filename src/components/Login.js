@@ -1,16 +1,13 @@
 import React, { Component } from "react";
-import { Platform, Image } from "react-native";
-import { Actions } from "react-native-router-flux";
-<<<<<<< HEAD
-import { View, Text, TouchableOpacity } from "../common/shared-components";
-=======
 import {
+  Platform,
+  Image,
   View,
   Text,
   TouchableOpacity,
+  Dimensions
 } from "react-native";
->>>>>>> b22ac87eb88a9a17e2f3e79ed41ab415d1ef077b
-import { Dimensions } from "react-native";
+import { Actions } from "react-native-router-flux";
 
 const screeWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;

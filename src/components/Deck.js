@@ -92,29 +92,22 @@ class Deck extends Component {
         </Animated.View>
       );
     }
-<<<<<<< HEAD
-=======
 
     if (this.props.data.length === 1) {
       return [
-        (
-          <Animated.View style={styles.cardStyle}>
-            {this.props.renderNoMoreCards()}
-          </Animated.View>
-        ), (
-          <Animated.View
-            key={this.props.data[0].getUid()}
-            style={[this.getCardStyle(), styles.cardStyle]}
-            {...this.state.panResponder.panHandlers}
-          >
-            {this.props.renderCard(this.props.data[0])}
-          </Animated.View>
-        )
+        <Animated.View
+          key={this.props.data[0].uid}
+          style={[this.getCardStyle(), styles.cardStyle]}
+          {...this.state.panResponder.panHandlers}
+        >
+          {this.props.renderCard(this.props.data[0])}
+        </Animated.View>,
+        <Animated.View style={styles.cardStyle}>
+          {this.props.renderNoMoreCards()}
+        </Animated.View>
       ];
     }
 
-    console.log("long");
->>>>>>> b22ac87eb88a9a17e2f3e79ed41ab415d1ef077b
     return this.props.data
       .map((item, i) => {
         if (i < this.state.index) {

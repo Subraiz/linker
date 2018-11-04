@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { Text, View, Switch } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import { Spinner } from "native-base";
 import { Actions } from "react-native-router-flux";
 import {
   FormLabel,
   FormInput,
-  FormValidationMessage,
-  TouchableOpacity
+  FormValidationMessage
 } from "react-native-elements";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -21,7 +20,7 @@ class LoginForm extends Component {
     if (this.props.error) {
       return (
         <FormValidationMessage>
-          Error Logging In - Please Try Again{" "}
+          Error Logging In - Please Try Again
         </FormValidationMessage>
       );
     }
