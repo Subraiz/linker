@@ -20,10 +20,7 @@ import {
   Dimensions,
   SafeAreaView
 } from "react-native";
-import md5 from "react-native-md5";
 import { Card, Button, Header } from "react-native-elements";
-import thumbs_up from "../assets/thumbs_up.png";
-import thumbs_down from "../assets/thumbs_down.png";
 
 const screeWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -34,38 +31,30 @@ class SwipeView extends Component {
     currentUser: this.props.user
   };
   componentWillMount() {
-    this.getMatches();
     this.props.queryUsers(this.state.currentUser);
+    this.getMatches();
   }
 
   componentDidUpdate() {
-    this.getMatches();
-  }
-
-  componentWillUpdate() {
-    this.getMatches();
+    //this.props.queryUsers(this.state.currentUser);
   }
 
   onSwipeRight(candidate) {
-    // if (this.state.forceSwipe == "left" || this.state.forceSwipe == "right") {
-    //   this.setState({ forceSwipe: "" });
-    // }
     this.props.onSwipeRight(this.state.currentUser, candidate);
-    this.props.queryUsers(this.state.currentUser);
     this.getMatches();
+    // this.props.queryUsers(this.state.currentUser);
+    // this.setState({});
   }
 
   onSwipeLeft(candidate) {
-    // if (this.state.forceSwipe == "left" || this.state.forceSwipe == "right") {
-    //   this.setState({ forceSwipe: "" });
-    // }
     this.props.onSwipeLeft(this.state.currentUser, candidate);
-    this.props.queryUsers(this.state.currentUser);
     this.getMatches();
+    // this.props.queryUsers(this.state.currentUser);
+    // this.setState({});
   }
 
   rightButtonHelper() {
-    console.log("Go to matches");
+    Actions.Matches({ currentUser: this.state.currentUser });
   }
 
   leftButtonHelper() {
@@ -148,7 +137,7 @@ class SwipeView extends Component {
             }}
             rightComponent={{
               icon: "message",
-              onPress: this.rightButtonHelper,
+              onPress: this.rightButtonHelper.bind(this),
               color: "#fff"
             }}
           />
@@ -159,28 +148,7 @@ class SwipeView extends Component {
           renderNoMoreCards={this.renderNoMoreCards}
           onSwipeRight={this.onSwipeRight.bind(this)}
           onSwipeLeft={this.onSwipeLeft.bind(this)}
-          forceSwipe={this.state.forceSwipe}
         />
-        {this.props.list.length === -5 ? (
-          <View style={styles.swipeButtons}>
-            <TouchableOpacity
-              onPress={() => {
-                this.setState({ forceSwipe: "left" });
-              }}
-              style={[styles.swipeButton, { paddingTop: 7, paddingBottom: 3 }]}
-            >
-              <Image source={thumbs_down} style={styles.buttonImage} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                this.setState({ forceSwipe: "right" });
-              }}
-              style={[styles.swipeButton, { paddingTop: 3, paddingBottom: 7 }]}
-            >
-              <Image source={thumbs_up} style={styles.buttonImage} />
-            </TouchableOpacity>
-          </View>
-        ) : null}
       </SafeAreaView>
     );
   }

@@ -7,7 +7,6 @@ import {
   LayoutAnimation,
   UIManager
 } from "react-native";
-import { Header } from "react-native-elements";
 
 const screeWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -65,8 +64,8 @@ class Deck extends Component {
 
   onSwipeComplete(direction) {
     const { onSwipeLeft, onSwipeRight, data } = this.props;
-    const user = data[this.state.index];
-    direction === "right" ? onSwipeRight(user) : onSwipeLeft(user);
+    const item = data[this.state.index];
+    direction === "right" ? onSwipeRight(item) : onSwipeLeft(item);
     this.state.position.setValue({ x: 0, y: 0 });
     this.setState({ index: this.state.index + 1 });
   }
@@ -87,27 +86,11 @@ class Deck extends Component {
   renderCards() {
     if (this.state.index >= this.props.data.length) {
       return (
-        <Animated.View style={styles.cardStyle}>
+        <Animated.View key={this.props.data.uid} style={styles.cardStyle}>
           {this.props.renderNoMoreCards()}
         </Animated.View>
       );
     }
-
-    if (this.props.data.length === 1) {
-      return [
-        <Animated.View
-          key={this.props.data[0].uid}
-          style={[this.getCardStyle(), styles.cardStyle]}
-          {...this.state.panResponder.panHandlers}
-        >
-          {this.props.renderCard(this.props.data[0])}
-        </Animated.View>,
-        <Animated.View style={styles.cardStyle}>
-          {this.props.renderNoMoreCards()}
-        </Animated.View>
-      ];
-    }
-
     return this.props.data
       .map((item, i) => {
         if (i < this.state.index) {
@@ -139,9 +122,6 @@ class Deck extends Component {
       .reverse();
   }
   render() {
-    if (this.props.forceSwipe) {
-      this.forceSwipe(this.props.forceSwipe);
-    }
     return (
       <View>
         <View style={styles.deckContainer}>{this.renderCards()}</View>

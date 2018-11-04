@@ -7,6 +7,7 @@ import SignUpFormGeneric from "./components/SignUpFormGeneric";
 import SignUpFormStudent from "./components/SignUpFormStudent";
 import SignUpFormRecruiter from "./components/SignUpFormRecruiter";
 import Settings from "./components/Settings";
+import Matches from "./components/Matches";
 
 const RouterComponent = () => {
   return (
@@ -46,6 +47,12 @@ const RouterComponent = () => {
             component={Settings}
             hideNavBar={false}
             title="Prefrences"
+          />
+          <Scene
+            key="Matches"
+            component={Matches}
+            hideNavBar={false}
+            title="Matches"
           />
         </Scene>
       </Scene>

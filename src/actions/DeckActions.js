@@ -63,45 +63,62 @@ export const onSwipeLeft = (user, candidate) => {
 };
 
 export const queryUsers = user => {
-  console.log("Getting list ready");
+  console.log("Running the query");
   const auth = firebase.auth();
   const firestore = firebase.firestore();
   firestore.settings({ timestampsInSnapshots: true });
 
   let list = [];
   let candidate;
+  let updatedUser;
 
-  return dispatch => {
+  return async dispatch => {
+    await firestore
+      .collection(user.userType)
+      .doc(user.uid)
+      .get()
+      .then(object => {
+        updatedUser = object.data();
+        console.log("New me:", updatedUser);
+      });
+
+    console.log("new Me", updatedUser);
+
     if (user.userType == "Students") {
-      firestore.collection("Recruiters").onSnapshot(snapshot => {
-        snapshot.forEach(doc => {
-          candidate = doc.data();
-          if (
-            !user.liked.includes(candidate.uid) &&
-            !user.disliked.includes(candidate.uid)
-          ) {
-            console.log(candidate);
-            console.log(user);
-            list.push(candidate);
-          }
+      firestore
+        .collection("Recruiters")
+        .get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            candidate = doc.data();
+            if (
+              !updatedUser.liked.includes(candidate.uid) &&
+              !updatedUser.disliked.includes(candidate.uid)
+            ) {
+              console.log("You should be here", candidate.name);
+              list.push(candidate);
+            }
+          });
+          dispatch({ type: T.FETCH_USERS_SUCCESS, payload: list });
         });
-        dispatch({ type: T.FETCH_USERS_SUCCESS, payload: list });
-      });
     } else {
-      firestore.collection("Students").onSnapshot(snapshot => {
-        snapshot.forEach(doc => {
-          candidate = doc.data();
-          if (
-            !user.liked.includes(candidate.uid) &&
-            !user.disliked.includes(candidate.uid)
-          ) {
-            console.log(candidate);
-            console.log(user);
-            list.push(candidate);
-          }
+      firestore
+        .collection("Students")
+        .get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            candidate = doc.data();
+            if (
+              !updatedUser.liked.includes(candidate.uid) &&
+              !updatedUser.disliked.includes(candidate.uid)
+            ) {
+              console.log("You don't belong here", candidate.name);
+            } else {
+              list.push(candidate.uid);
+            }
+          });
+          dispatch({ type: T.FETCH_USERS_SUCCESS, payload: list });
         });
-        dispatch({ type: T.FETCH_USERS_SUCCESS, payload: list });
-      });
     }
   };
 };
