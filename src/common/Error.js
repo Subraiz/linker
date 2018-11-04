@@ -6,7 +6,7 @@ export default class Error extends Component {
     const error = this.props.value;
     if (!error) return null;
     return (
-      <Text style={{color: 'red'}} >{error}</Text>
+      <Text style={{color: 'red', margin: 10}} >{error}</Text>
     );
   }
 }

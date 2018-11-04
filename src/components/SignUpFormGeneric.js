@@ -29,7 +29,7 @@ class SignUpFormGeneric extends Component {
     let errored = false;
     
     if (!this.props.name || this.props.name.length < 4) {
-      errors.name = "Please provid ea valid name!";
+      errors.name = "Please provide a valid name!";
       errored = true;
     }
     

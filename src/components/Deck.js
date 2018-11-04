@@ -18,7 +18,7 @@ class Deck extends Component {
     super(props);
     const position = new Animated.ValueXY();
     const panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: this.shouldSetPanResponder,
       onPanResponderMove: (e, gesture) => {
         position.setValue({ x: gesture.dx, y: gesture.dy });
       },
@@ -34,6 +34,11 @@ class Deck extends Component {
     });
 
     this.state = { panResponder, position, };
+    this.shouldSetPanResponder = this.shouldSetPanResponder.bind(this);
+  }
+
+  shouldSetPanResponder() {
+    return !this.props.showMore;
   }
 
   componentWillUpdate() {

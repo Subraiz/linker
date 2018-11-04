@@ -29,6 +29,7 @@ class SwipeView extends Component {
     this.state = {
       candidates: [],
       forceSwipe: "",
+      showMore: false,
     };
 
     if (this.props.user.userType && this.props.user.userType == USER.STUDENT) {
@@ -54,6 +55,7 @@ class SwipeView extends Component {
     this.updateList = this.updateList.bind(this);
     this.onSwipeLeft = this.onSwipeLeft.bind(this);
     this.onSwipeRight = this.onSwipeRight.bind(this);
+    this.toggleShowMore = this.toggleShowMore.bind(this);
   }
 
   setNextCandidate(candidate) {
@@ -70,13 +72,11 @@ class SwipeView extends Component {
   onSwipeLeft(candidate) {
     // TODO: update database
     this.updateList();
-    this.setState({ forceSwipe: "" });
   }
 
   onSwipeRight(candidate) {
     // TODO: update database
     this.updateList();
-    this.setState({ forceSwipe: "" });
   }
 
   updateList() {
@@ -88,27 +88,16 @@ class SwipeView extends Component {
       candidates.push(nextCandidate);
     }
     candidates.shift();
-    this.setState({ candidates });
+    this.setState({ candidates, forceSwipe: "", showMore: false });
+  }
+
+  toggleShowMore() {
+    this.setState({ showMore: !showMore });
   }
 
   renderStudentCard(candidate) {
     return (
-      <Card
-        key={candidate.getUid()}
-        title={candidate.getName()}
-        image={{ uri: candidate.getImage() }}
-        imageStyle={{ height: 400 }}
-      >
-        <Text style={{ marginBottom: 10 }}>
-          School: {candidate.getSchool()}
-          Major: {candidate.getMajor()}
-        </Text>
-        <Button
-          icon={{ name: "assignment" }}
-          backgroundColor="#03A9F4"
-          title="View More"
-        />
-      </Card>
+      <StudentProfileView proflie={candidate} showMore={this.state.showMore} toggleShowMore={this.toggleShowMore} />
     );
   }
 
@@ -143,8 +132,9 @@ class SwipeView extends Component {
           onSwipeLeft={this.onSwipeLeft}
           onSwipeRight={this.onSwipeRight}
           forceSwipe={this.state.forceSwipe}
+          showMore={this.state.showMore}
         />
-        { candidates.length > 0 ?
+        { candidates.length > 0 && !this.state.showMore ?
           <View style={styles.swipeButtons}>
             <TouchableOpacity
               onPress={() => {
