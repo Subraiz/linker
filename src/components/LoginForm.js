@@ -1,43 +1,89 @@
 import React, { Component } from "react";
 import { Text, View, Switch } from "react-native";
+import { Spinner } from "native-base";
 import { Actions } from "react-native-router-flux";
 import {
   FormLabel,
   FormInput,
   FormValidationMessage
 } from "react-native-elements";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { TouchableOpacity } from "../common/shared-components";
+import { logInUser, updateLoginInfo } from "../actions/LoginActions";
 
-export default class LoginForm extends Component {
+class LoginForm extends Component {
   loginButton = () => {
-    Actions.swipe();
+    this.props.logInUser(this.props.email, this.props.password);
   };
+
+  renderErrorMessage() {
+    if (this.props.error) {
+      return (
+        <FormValidationMessage>
+          Error Logging In - Please Try Again{" "}
+        </FormValidationMessage>
+      );
+    }
+  }
+
+  renderLoadingOrButton() {
+    if (this.props.loading) {
+      return <Spinner color="black" />;
+    } else {
+      return (
+        <TouchableOpacity onPress={this.loginButton} style={styles.button}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+      );
+    }
+  }
 
   render() {
     return (
       <View>
         <FormLabel>Email</FormLabel>
         <FormInput
-          onChangeText={e => {
-            console.log(e);
+          value={this.props.email}
+          onChangeText={text => {
+            this.props.updateLoginInfo({ prop: "email", value: text });
           }}
         />
         <FormLabel>Password</FormLabel>
         <FormInput
+          value={this.props.password}
           secureTextEntry
-          onChangeText={e => {
-            console.log(e);
+          onChangeText={text => {
+            this.props.updateLoginInfo({ prop: "password", value: text });
           }}
         />
+        {this.renderErrorMessage()}
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={this.loginButton} style={styles.button}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
+          {this.renderLoadingOrButton()}
         </View>
       </View>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    email: state.auth.email,
+    password: state.auth.password,
+    loading: state.auth.loading,
+    error: state.auth.error
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      logInUser: logInUser,
+      updateLoginInfo: updateLoginInfo
+    },
+    dispatch
+  );
+};
 
 const styles = {
   buttonsContainer: {
@@ -65,3 +111,8 @@ const styles = {
     fontSize: 20
   }
 };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LoginForm);

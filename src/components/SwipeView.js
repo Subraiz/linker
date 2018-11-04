@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import { Button, Card } from "react-native-elements";
 import Deck from "./Deck";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { queryUsers } from "../actions/DeckActions";
 
 const DATA = [
   {
@@ -85,16 +88,31 @@ class SwipeView extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Deck
           data={DATA}
           renderCard={this.renderCard}
           renderNoMoreCards={this.renderNoMoreCards}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      queryUsers: queryUsers
+    },
+    dispatch
+  );
+};
 
 const styles = {
   container: {
@@ -103,4 +121,7 @@ const styles = {
   }
 };
 
-export default SwipeView;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SwipeView);
