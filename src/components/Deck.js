@@ -95,7 +95,7 @@ class Deck extends Component {
           </Animated.View>
         ), (
           <Animated.View
-            key={this.props.data[0].uid}
+            key={this.props.data[0].getUid()}
             style={[this.getCardStyle(), styles.cardStyle]}
             {...this.state.panResponder.panHandlers}
           >
@@ -133,6 +133,9 @@ class Deck extends Component {
       }).reverse();
   }
   render() {
+    if (this.props.forceSwipe) {
+      this.forceSwipe(this.props.forceSwipe);
+    }
     return (
       <View>
         <View style={styles.deckContainer}>{this.renderCards()}</View>

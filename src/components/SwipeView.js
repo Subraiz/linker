@@ -5,7 +5,14 @@ import Deck from "./Deck";
 import { Actions } from "react-native-router-flux";
 import { Text, View, TouchableOpacity } from "../common/shared-components";
 import { Database } from "../models/Database";
-import md5 from "react-native-md5";
+
+import { Image, Dimensions } from "react-native";
+
+import thumbs_up from "../assets/thumbs_up.png";
+import thumbs_down from "../assets/thumbs_down.png";
+
+const screeWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 
 export default class SwipeView extends Component {
   constructor(props) {
@@ -13,6 +20,7 @@ export default class SwipeView extends Component {
     this.state = {
       user: {},
       candidates: [],
+      forceSwipe: "",
     };
 
     if (props.userType && props.userType == USER.STUDENT) {
@@ -62,11 +70,13 @@ export default class SwipeView extends Component {
   onSwipeLeft(candidate) {
     // TODO: update database
     this.updateList();
+    this.setState({ forceSwipe: "" });
   }
 
   onSwipeRight(candidate) {
     // TODO: update database
     this.updateList();
+    this.setState({ forceSwipe: "" });
   }
 
   updateList() {
@@ -81,21 +91,17 @@ export default class SwipeView extends Component {
     this.setState({ candidates });
   }
 
-  getGravatarUri(email) {
-    return "https://www.gravatar.com/avatar/" + md5.hex_md5(email.toLowerCase().trim()) + "?s=300";
-  }
-
   renderStudentCard(candidate) {
     return (
       <Card
-        key={candidate.uid}
-        title={candidate.name}
-        image={{ uri: this.getGravatarUri(candidate.email) }}
+        key={candidate.getUid()}
+        title={candidate.getName()}
+        image={{ uri: candidate.getImage() }}
         imageStyle={{ height: 400 }}
       >
         <Text style={{ marginBottom: 10 }}>
-          School: {candidate.school}
-          Major: {candidate.major}
+          School: {candidate.getSchool()}
+          Major: {candidate.getMajor()}
         </Text>
         <Button
           icon={{ name: "assignment" }}
@@ -136,12 +142,57 @@ export default class SwipeView extends Component {
           renderNoMoreCards={this.renderNoMoreCards}
           onSwipeLeft={this.onSwipeLeft}
           onSwipeRight={this.onSwipeRight}
+          forceSwipe={this.state.forceSwipe}
         />
+        { candidates.length > 0 ?
+          <View style={styles.swipeButtons}>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({ forceSwipe: "left" });
+              }}
+                style={[styles.swipeButton, {paddingTop: 7, paddingBottom: 3}]}
+            >
+              <Image
+                source={thumbs_down}
+                style={styles.buttonImage}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                this.setState({ forceSwipe: "right" });
+              }}
+              style={[styles.swipeButton, {paddingTop: 3, paddingBottom: 7}]}
+            >
+              <Image
+                source={thumbs_up}
+                style={styles.buttonImage}
+              />
+            </TouchableOpacity>
+          </View>
+        : null }
       </View>
     );
   }
 }
 
 const styles = {
-
+  swipeButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    margin: 10,
+    marginTop: screenHeight - 100,
+  },
+  swipeButton: {
+    alignItems: "center",
+    marign: 5,
+    padding: 5,
+    backgroundColor: "#fff", 
+    borderWidth: 1,
+    borderRadius: 100,
+  },
+  buttonImage: {
+    width: 70,
+    height: 70,
+  }
 };
