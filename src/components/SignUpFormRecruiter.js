@@ -33,7 +33,23 @@ class SignUpFormRecruiter extends Component {
   }
 
   submitButton() {
-    this.props.registerUser(this.props.user);
+    let errors = {};
+    let errored = false;
+    
+    let fields = ["companyName", "companyAddress", "company", "industry", "description];
+
+    fields.forEach(field => {
+      if (!this.props[field] || this.props[field].length < 4) {
+        errors.name = "Please provide a valid " + field + "!";
+        errored = true;
+      }
+    });
+    
+    if (errored) {
+      this.setState({ errors });
+    } else {
+      this.props.registerUser(this.props.user);
+    }
   }
 
   updatedPositions(text) {

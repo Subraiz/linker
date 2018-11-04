@@ -12,7 +12,7 @@ export const Database = {
   getNextStudent: (recruiter) => {
     // TODO
     if (i == 15) return null;
-    let student = new Student("123abc" + i, "David Shen S" + (i++), "davi@d-shen.xyz", "6178637436", "IMAGE", "Boston College", "Computer Science", 3.8, "I'm a student", "None");
+    let student = new Student("123abc" + i, "David Shen S" + (i++), "davi@d-shen.xyz", "6178637436", "", "Boston College", "", 3.8, "", []);
     return student;
   }
 }

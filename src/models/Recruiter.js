@@ -1,30 +1,40 @@
+import md5 from "react-native-md5";
+
 export default class Recruiter {
   constructor(
     uid,
     name,
     email,
-    phone,
+    phone = "5555555555",
     image,
-    companyName,
-    companyAddress,
+    companyName = "Some Company",
+    companyAddress = "Some Address",
     companyDescription,
-    industry,
-    positionsAvailable,
+    industry = "General",
+    positionsAvailable = ["Employee"],
     liked = [],
     disliked = [],
   ) {
     this.uid = uid;
     this.name = name;
     this.email = email;
-    this.phone = phone;
+    this.phone = phone || "5555555555";
     this.image = image;
-    this.companyName = companyName;
-    this.companyAddress = companyAddress;
-    this.companyDescription = companyDescription;
-    this.industry = industry;
-    this.positionsAvailable = positionsAvailable;
+    this.companyName = companyName || "Some Company";
+    this.companyAddress = companyAddress || "Some Address";
+    this.industry = industry || "General";
+    this.companyDescription = this.companyDescription || "I am " + this.name + " and I am a recruiter from " + this.companyName + ", a company in the " + this.industry + " industry.";
+    this.positionsAvailable = positionsAvailable || ["Employee"];
     this.liked = liked;
     this.disliked = disliked;
+  }
+
+  getGravatarUri(email) {
+    return "https://www.gravatar.com/avatar/" + md5.hex_md5(email.toLowerCase().trim()) + "?s=300";
+  }
+
+  getUid() {
+    return this.uid;
   }
 
   getName() {
@@ -40,7 +50,7 @@ export default class Recruiter {
   }
 
   getImage() {
-    return this.image;
+    return this.image || this.getGravatarUri(this.getEmail());
   }
 
   getCompanyName() {
@@ -69,5 +79,45 @@ export default class Recruiter {
 
   disliked(uid) {
     this.disliked.push(uid);
+  }
+
+  toObject() {
+    return {
+      uid: this.getUid(),
+      name: this.getName(),
+      email: this.getEmail(),
+      phone: this.getPhone(),
+      image: this.getImage(),
+      companyName: this.getCompanyName(),
+      companyAddress: this.getCompanyAddress(),
+      companyDescription: this.getCompanyDescription(),
+      industry: this.getIndustry(),
+      positionsAvailable: this.getPositionsAvailable(),
+      liked: this.getLiked(),
+      disliked: this.getDisliked(),
+    };
+  }
+
+  createFromObject(recruiterObj) {
+    if (!recruiterObj.uid) {
+      console.error("Invalid recruiter object!");
+      console.error(recruiterObj);
+      return null;
+    }
+
+    return new Recruiter(
+      recruiterObj.uid,
+      recruiterObj.name,
+      recruiterObj.email,
+      recruiterObj.phone,
+      recruiterObj.image,
+      recruiterObj.companyName,
+      recruiterObj.companyAddress,
+      recruiterObj.companyDescription,
+      recruiterObj.industry,
+      recruiterObj.positionsAvailable,
+      recruiterObj.liked,
+      recruiterObj.disliked
+    );
   }
 }

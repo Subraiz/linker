@@ -16,6 +16,7 @@ import {
   FormValidationMessage,
   ButtonGroup
 } from "react-native-elements";
+import Error from "../common/Error";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -44,7 +45,45 @@ class SignUpFormStudent extends Component {
   };
 
   submitButton() {
-    this.props.registerUser(this.props.user);
+    let errors = {};
+    let errored = false;
+    
+    if (!this.props.school|| this.props.school.length < 4) {
+      errors.name = "Please select a valid school!";
+      errored = true;
+    }
+    
+    if (!this.props.gpa|| this.props.gpa.length || isNaN(this.props.gpa)) {
+        errors.gpa = "Please provide a valid gpa!";
+        errored = true;
+    } else {
+      let gpa = Number(this.props.gpa);
+      if (gpa > 5 || gpa < 1) {
+        errors.gpa = "Please provide a valid gpa!";
+        errored = true;
+      }
+    }
+    
+    if (!this.props.major|| this.props.major.length < 2) {
+      errors.major = "Please provide a valid major!";
+      errored = true;
+    }
+    
+    if (!this.props.email|| this.props.email.length < 6) {
+      errors.email = "Please provide a valid email!";
+      errored = true;
+    }
+    
+    if (!this.props.about|| this.props.about.length < 20) {
+      errors.about = "Please provide a valid description!";
+      errored = true;
+    }
+
+    if (errored) {
+      this.setState({ errors });
+    } else {
+      this.props.registerUser(this.props.user);
+    }
   }
 
   updatedSkills(text) {
@@ -104,6 +143,7 @@ class SignUpFormStudent extends Component {
   }
 
   render() {
+    const { errors } = this.state;
     return (
       <ScrollView style={styles.containerStyle}>
         <SearchBar
@@ -128,12 +168,14 @@ class SignUpFormStudent extends Component {
           >
             {this.renderLabels(this.state.schools)}
           </Picker>
+          <Error value={errors.school} />
           <FormLabel>Major</FormLabel>
           <FormInput
             onChangeText={text => {
               this.props.updateUser({ prop: "major", value: text });
             }}
           />
+          <Error value={errors.major} />
           <FormLabel>GPA</FormLabel>
           <FormInput
             keyboardType="numeric"
@@ -141,18 +183,21 @@ class SignUpFormStudent extends Component {
               this.props.updateUser({ prop: "gpa", value: text });
             }}
           />
+          <Error value={errors.gpa} />
           <FormLabel>About</FormLabel>
           <FormInput
             onChangeText={text => {
               this.props.updateUser({ prop: "about", value: text });
             }}
           />
+          <Error value={errors.about} />
           <FormLabel>Skills (Seperated By Commas)</FormLabel>
           <FormInput
             value={this.state.skillTitle}
             onChangeText={this.updatedSkills.bind(this)}
           />
           <View style={styles.skillsViewContainer}>{this.renderSkills()}</View>
+          <Error value={errors.skills} />
         </KeyboardAwareScrollView>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
