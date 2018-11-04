@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { View, Text, SafeAreaView } from "react-native";
-import { Button, Card } from "react-native-elements";
+
+
 import Deck from "./Deck";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -153,12 +153,13 @@ const mapDispatchToProps = dispatch => {
 };
 
 const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
+  }
+}
 
-<<<<<<< HEAD
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SwipeView);
-=======
-};
->>>>>>> 1b719f759aa6a7e1422847163ae2380e64e9609e
+)(SwipeView)
