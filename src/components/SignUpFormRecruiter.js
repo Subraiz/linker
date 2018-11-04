@@ -16,8 +16,11 @@ import {
   ButtonGroup
 } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { updateUser, registerUser } from "../actions/LoginActions";
 
-export default class SignUpFormStudent extends Component {
+class SignUpFormRecruiter extends Component {
   state = {
     positions: [],
     positionTitle: ""
@@ -29,6 +32,10 @@ export default class SignUpFormStudent extends Component {
     LayoutAnimation.spring();
   }
 
+  submitButton() {
+    this.props.registerUser(this.props.user);
+  }
+
   updatedPositions(text) {
     this.setState({ positionTitle: text });
 
@@ -38,7 +45,7 @@ export default class SignUpFormStudent extends Component {
       updatedPositions = this.state.positions;
       updatedPositions.push(this.state.positionTitle);
       this.setState({ positions: updatedPositions, positionTitle: "" });
-      console.log(this.state.positions);
+      this.props.updateUser({ prop: "positions", value: this.state.positions });
     }
   }
 
@@ -71,26 +78,29 @@ export default class SignUpFormStudent extends Component {
         >
           <FormLabel>Company Name</FormLabel>
           <FormInput
-            onChangeText={e => {
-              console.log(e);
+            onChangeText={text => {
+              this.props.updateUser({ prop: "companyName", value: text });
             }}
           />
           <FormLabel>Company Address</FormLabel>
           <FormInput
-            onChangeText={e => {
-              console.log(e);
+            onChangeText={text => {
+              this.props.updateUser({ prop: "companyAddress", value: text });
             }}
           />
           <FormLabel>Industry</FormLabel>
           <FormInput
-            onChangeText={e => {
-              console.log(e);
+            onChangeText={text => {
+              this.props.updateUser({ prop: "industry", value: text });
             }}
           />
           <FormLabel>Company Description</FormLabel>
           <FormInput
-            onChangeText={e => {
-              console.log(e);
+            onChangeText={text => {
+              this.props.updateUser({
+                prop: "companyDescription",
+                value: text
+              });
             }}
           />
           <FormLabel>Positions Available (Seperated By Comma)</FormLabel>
@@ -103,7 +113,10 @@ export default class SignUpFormStudent extends Component {
           </View>
         </KeyboardAwareScrollView>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={this.loginButton} style={styles.button}>
+          <TouchableOpacity
+            onPress={this.submitButton.bind(this)}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         </View>
@@ -111,6 +124,27 @@ export default class SignUpFormStudent extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+    companyName: state.user.companyName,
+    companyAddress: state.user.companyAddress,
+    industry: state.user.industry,
+    companyDescription: state.user.companyDescription,
+    positions: state.user.positions
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      updateUser: updateUser,
+      registerUser: registerUser
+    },
+    dispatch
+  );
+};
 
 const styles = {
   positionsViewContainer: { margin: 15 },
@@ -145,3 +179,8 @@ const styles = {
     color: "#000"
   }
 };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignUpFormRecruiter);

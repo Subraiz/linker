@@ -17,6 +17,9 @@ import {
   ButtonGroup
 } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { updateUser, registerUser } from "../actions/LoginActions";
 
 let nationalSchools = [
   "Amherst",
@@ -33,12 +36,16 @@ let nationalSchools = [
 
 nationalSchools = nationalSchools.sort();
 
-export default class SignUpFormStudent extends Component {
+class SignUpFormStudent extends Component {
   state = {
     schools: nationalSchools,
     skills: [],
     skillTitle: ""
   };
+
+  submitButton() {
+    this.props.registerUser(this.props.user);
+  }
 
   updatedSkills(text) {
     this.setState({ skillTitle: text });
@@ -49,6 +56,7 @@ export default class SignUpFormStudent extends Component {
       updatedSkills = this.state.skills;
       updatedSkills.push(this.state.skillTitle);
       this.setState({ skills: updatedSkills, skillTitle: "" });
+      this.props.updateUser({ prop: "skills", value: this.state.skills });
     }
   }
 
@@ -108,26 +116,35 @@ export default class SignUpFormStudent extends Component {
           resetScrollToCoords={{ x: 0, y: 0 }}
           scrollEnabled={true}
         >
-          <Picker style={{ width: 300, alignSelf: "center" }}>
+          <Picker
+            style={{ width: 300, alignSelf: "center" }}
+            selectedValue={this.props.school || "Boston College"}
+            onValueChange={school =>
+              this.props.updateUser({
+                prop: "school",
+                value: school || "Boston College"
+              })
+            }
+          >
             {this.renderLabels(this.state.schools)}
           </Picker>
           <FormLabel>Major</FormLabel>
           <FormInput
-            onChangeText={e => {
-              console.log(e);
+            onChangeText={text => {
+              this.props.updateUser({ prop: "major", value: text });
             }}
           />
           <FormLabel>GPA</FormLabel>
           <FormInput
             keyboardType="numeric"
-            onChangeText={e => {
-              console.log(e);
+            onChangeText={text => {
+              this.props.updateUser({ prop: "gpa", value: text });
             }}
           />
           <FormLabel>About</FormLabel>
           <FormInput
-            onChangeText={e => {
-              console.log(e);
+            onChangeText={text => {
+              this.props.updateUser({ prop: "about", value: text });
             }}
           />
           <FormLabel>Skills (Seperated By Commas)</FormLabel>
@@ -138,7 +155,10 @@ export default class SignUpFormStudent extends Component {
           <View style={styles.skillsViewContainer}>{this.renderSkills()}</View>
         </KeyboardAwareScrollView>
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={this.loginButton} style={styles.button}>
+          <TouchableOpacity
+            onPress={this.submitButton.bind(this)}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>Submit</Text>
           </TouchableOpacity>
         </View>
@@ -146,6 +166,27 @@ export default class SignUpFormStudent extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+    school: state.user.school,
+    major: state.user.major,
+    gpa: state.user.gpa,
+    about: state.user.about,
+    skills: state.user.skills
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      updateUser: updateUser,
+      registerUser: registerUser
+    },
+    dispatch
+  );
+};
 
 const styles = {
   containerStyle: {
@@ -183,3 +224,8 @@ const styles = {
     color: "#000"
   }
 };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignUpFormStudent);

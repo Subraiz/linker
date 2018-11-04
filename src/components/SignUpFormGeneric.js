@@ -7,8 +7,12 @@ import {
   FormValidationMessage
 } from "react-native-elements";
 import { TouchableOpacity } from "../common/shared-components";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { updateUser } from "../actions/LoginActions";
+import * as USER from "../models/UserTypes";
 
-export default class SignUpFormGeneric extends Component {
+class SignUpFormGeneric extends Component {
   componentDidUpdate() {
     UIManager.setLayoutAnimationEnabledExperimental &&
       UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -17,8 +21,10 @@ export default class SignUpFormGeneric extends Component {
 
   selectButton = index => {
     if (index == 0) {
+      this.props.updateUser({ prop: "userType", value: USER.STUDENT });
       Actions.SignUpFormStudent();
     } else {
+      this.props.updateUser({ prop: "userType", value: USER.RECRUITER });
       Actions.SignUpFormRecruiter();
     }
   };
@@ -28,21 +34,21 @@ export default class SignUpFormGeneric extends Component {
       <View>
         <FormLabel>Name</FormLabel>
         <FormInput
-          onChangeText={e => {
-            console.log(e);
+          onChangeText={text => {
+            this.props.updateUser({ prop: "name", value: text });
           }}
         />
         <FormLabel>Email</FormLabel>
         <FormInput
-          onChangeText={e => {
-            console.log(e);
+          onChangeText={text => {
+            this.props.updateUser({ prop: "email", value: text });
           }}
         />
         <FormLabel>Password</FormLabel>
         <FormInput
           secureTextEntry
-          onChangeText={e => {
-            console.log(e);
+          onChangeText={text => {
+            this.props.updateUser({ prop: "password", value: text });
           }}
         />
         <View style={styles.selectMessageContainer}>
@@ -71,6 +77,24 @@ export default class SignUpFormGeneric extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    name: state.user.name,
+    email: state.user.email,
+    password: state.user.password,
+    userType: state.user.userType
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      updateUser: updateUser
+    },
+    dispatch
+  );
+};
+
 const styles = {
   buttonsContainer: {
     flexDirection: "row",
@@ -96,3 +120,8 @@ const styles = {
     fontSize: 20
   }
 };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignUpFormGeneric);

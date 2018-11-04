@@ -4,13 +4,13 @@ import { Actions } from "react-native-router-flux";
 import {
   FormLabel,
   FormInput,
-  FormValidationMessage,
+  FormValidationMessage
 } from "react-native-elements";
 import { TouchableOpacity } from "../common/shared-components";
 
 export default class LoginForm extends Component {
   loginButton = () => {
-    Actions.SwipeView();
+    Actions.swipe();
   };
 
   render() {
@@ -30,10 +30,7 @@ export default class LoginForm extends Component {
           }}
         />
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity
-            onPress={this.loginButton}
-            style={styles.button}
-          >
+          <TouchableOpacity onPress={this.loginButton} style={styles.button}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
         </View>
@@ -44,19 +41,19 @@ export default class LoginForm extends Component {
 
 const styles = {
   buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    margin: 5,
+    flexDirection: "row",
+    justifyContent: "center",
+    margin: 5
   },
   button: {
-    width: '50%',
-    alignItems: 'center',
+    width: "50%",
+    alignItems: "center",
     margin: 5,
     padding: 30,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff"
   },
   buttonText: {
-    color: '#000',
+    color: "#000"
   },
   selectMessageContainer: {
     display: "flex",
