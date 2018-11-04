@@ -8,6 +8,7 @@ import SignUpFormStudent from "./components/SignUpFormStudent";
 import SignUpFormRecruiter from "./components/SignUpFormRecruiter";
 import Settings from "./components/Settings";
 import Matches from "./components/Matches";
+import MainWebView from "./components/MainWebView";
 
 const RouterComponent = () => {
   return (
@@ -53,6 +54,12 @@ const RouterComponent = () => {
             component={Matches}
             hideNavBar={false}
             title="Matches"
+          />
+          <Scene
+            key="MainWebView"
+            component={MainWebView}
+            hideNavBar={false}
+            title="MainWebView"
           />
         </Scene>
       </Scene>
