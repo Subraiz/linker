@@ -1,11 +1,7 @@
 import React, { Component } from "react";
-import { Platform } from "react-native";
+import { Platform, Image } from "react-native";
 import { Actions } from "react-native-router-flux";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-} from "../common/shared-components";
+import { View, Text, TouchableOpacity } from "../common/shared-components";
 import { Dimensions } from "react-native";
 
 const screeWidth = Dimensions.get("window").width;
@@ -14,7 +10,6 @@ const screenHeight = Dimensions.get("window").height;
 export default class Login extends Component {
   selectButton = index => {
     if (index === 0) {
-
       Actions.LoginForm();
       // Go to sign up
     } else {
@@ -26,21 +21,31 @@ export default class Login extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <View style={styles.imageContainerStyle}>
+          <Image
+            style={styles.imageStyle}
+            source={require("../images/wallpaper.jpg")}
+          />
+        </View>
         <View style={styles.mainView}>
-          <Text>Linker</Text>
+          <Image source={require("../images/linkerLogo.png")} />
         </View>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity
-            onPress={() => {this.selectButton(0);}}
+            onPress={() => {
+              this.selectButton(0);
+            }}
             style={styles.button}
           >
-            <Text style={styles.buttonText}>Login</Text>
+            <Text style={styles.buttonText}>Log In</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {this.selectButton(1);}}
+            onPress={() => {
+              this.selectButton(1);
+            }}
             style={styles.button}
           >
-            <Text style={styles.buttonText}>Signup</Text>
+            <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -59,21 +64,36 @@ const styles = {
   },
   mainView: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "space-around"
+    justifyContent: "space-between"
   },
   buttonsContainer: {
-    flexDirection: 'row',
-    margin: 5,
+    flexDirection: "row",
+    margin: 5
   },
   button: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     margin: 5,
     padding: 30,
-    backgroundColor: '#fff',
+    backgroundColor: "rgba(99, 149, 242, .75)",
+    shadowOffset: { width: 1, height: 2 },
+    shadowColor: "black",
+    shadowOpacity: 0.5
   },
   buttonText: {
-    color: '#000',
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "400"
   },
+  imageStyle: {
+    zIndex: -1,
+    position: "absolute",
+    height: screenHeight,
+    width: screeWidth * 3
+  },
+  imageContainerStyle: {
+    display: "flex",
+    alignItems: "center",
+    left: 20
+  }
 };

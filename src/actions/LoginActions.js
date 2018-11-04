@@ -14,18 +14,50 @@ export const updateUser = ({ prop, value }) => {
 };
 
 export const logInUser = (email, password) => {
+  let uid = "";
+  let user;
   const auth = firebase.auth();
+  const firestore = firebase.firestore();
+  firestore.settings({ timestampsInSnapshots: true });
   return async dispatch => {
-    dispatch({ type: T.LOGIN_USER });
+    await dispatch({ type: T.LOGIN_USER });
     auth
       .signInWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(userObject => {
+        uid = userObject.user.uid;
         dispatch({ type: T.LOGIN_USER_SUCCESS });
-        Actions.swipe();
       })
       .catch(error => {
         console.log(error);
         dispatch({ type: T.LOGIN_USER_FAILURE });
+      });
+
+    await firestore
+      .collection("Recruiters")
+      .get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          user = doc.data();
+          if (uid == user.uid) {
+            console.log("Profile Found for Recruiter");
+            dispatch({ type: T.SAVE_USER_INFORMATION, payload: user });
+            Actions.swipe({ user: user });
+          }
+        });
+      });
+
+    await firestore
+      .collection("Students")
+      .get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          user = doc.data();
+          if (uid == user.uid) {
+            console.log("Profile Found for Student");
+            dispatch({ type: T.SAVE_USER_INFORMATION, payload: user });
+            Actions.swipe({ user: user });
+          }
+        });
       });
   };
 };
@@ -38,6 +70,7 @@ export const updateLoginInfo = ({ prop, value }) => {
 };
 
 export const registerUser = user => {
+  let uid = "";
   let newUser;
   const auth = firebase.auth();
   const firestore = firebase.firestore();
@@ -46,8 +79,7 @@ export const registerUser = user => {
     await auth
       .createUserWithEmailAndPassword(user.email, user.password)
       .then(userObject => {
-        const uid = userObject.user.uid;
-
+        uid = userObject.user.uid;
         if (user.userType == USER.STUDENT) {
           let {
             name,
@@ -62,50 +94,53 @@ export const registerUser = user => {
           } = user;
           if (!school) school = "Boston College";
           newUser = {
-            uid,
+            uid: uid,
             name,
             email,
             school,
             major,
             gpa,
             about,
-            skills
+            skills,
+            userType: "Students",
+            liked: [],
+            disliked: [],
+            matches: []
           };
         } else {
           let {
-            uid,
             name,
             email,
-            phone,
-            image,
             companyName,
             companyAddress,
             companyDescription,
             industry,
-            positionsAvailable
+            positions
           } = user;
-          newUser = new Recruiter(
-            uid,
+          newUser = {
+            uid: uid,
             name,
             email,
             companyName,
             companyAddress,
             companyDescription,
             industry,
-            positionsAvailable
-          );
+            positions,
+            userType: "Recruiters",
+            liked: [],
+            disliked: [],
+            matches: []
+          };
         }
       })
       .catch(error => console.log(error));
 
-    console.log(newUser);
-
     await firestore
       .collection(user.userType)
-      .add(newUser)
-      .then(() => {
-        dispatch({ type: T.SAVE_USER_INFORMATION, payload: newUser });
-        Actions.swipe();
+      .doc(uid)
+      .set(newUser)
+      .then(object => {
+        Actions.swipe({ user: newUser });
       })
       .catch(error => console.log(error));
   };

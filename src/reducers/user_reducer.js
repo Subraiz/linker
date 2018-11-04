@@ -7,7 +7,7 @@ export default (state = INITIAL_STATE, action) => {
     case T.USER_INFORMATION_UPDATE:
       return { ...state, [action.payload.prop]: action.payload.value };
     case T.SAVE_USER_INFORMATION:
-      return { payload };
+      return [action.payload];
     default:
       return INITIAL_STATE;
   }

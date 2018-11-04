@@ -105,7 +105,10 @@ const styles = {
     alignItems: "center",
     margin: 5,
     padding: 30,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
+    shadowOffset: { width: 1, height: 2 },
+    shadowColor: "navy",
+    shadowOpacity: 0.3
   },
   buttonText: {
     color: "#000"
