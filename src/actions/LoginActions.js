@@ -13,6 +13,30 @@ export const updateUser = ({ prop, value }) => {
   };
 };
 
+export const logInUser = (email, password) => {
+  const auth = firebase.auth();
+  return async dispatch => {
+    dispatch({ type: T.LOGIN_USER });
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        dispatch({ type: T.LOGIN_USER_SUCCESS });
+        Actions.swipe();
+      })
+      .catch(error => {
+        console.log(error);
+        dispatch({ type: T.LOGIN_USER_FAILURE });
+      });
+  };
+};
+
+export const updateLoginInfo = ({ prop, value }) => {
+  return {
+    type: T.UPDATE_LOGIN_INFO,
+    payload: { prop, value }
+  };
+};
+
 export const registerUser = user => {
   let newUser;
   const auth = firebase.auth();

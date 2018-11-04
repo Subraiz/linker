@@ -1,6 +1,10 @@
 import React, { Component } from "react";
-import { Card, Button } from "react-native-elements";
+
+
 import Deck from "./Deck";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { queryUsers } from "../actions/DeckActions";
 
 import { Actions } from "react-native-router-flux";
 import { Text, View, TouchableOpacity } from "../common/shared-components";
@@ -14,16 +18,15 @@ import thumbs_down from "../assets/thumbs_down.png";
 const screeWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-export default class SwipeView extends Component {
+class SwipeView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: {},
       candidates: [],
       forceSwipe: "",
     };
 
-    if (props.userType && props.userType == USER.STUDENT) {
+    if (this.props.user.userType && this.props.user.userType == USER.STUDENT) {
       this.getNextCandidate = () => {
         return Database.getNextRecruiter();
       };
@@ -55,16 +58,8 @@ export default class SwipeView extends Component {
   }
 
   componentDidMount() {
-    let { candidates } = this.state;
-    for (let i = 0; i < 5; i++) {
-      const nextCandidate = this.getNextCandidate();
-      if (!nextCandidate) {
-        // render last card view
-      } else {
-        candidates.push(nextCandidate);
-      }
-    }
-    this.setState({ candidates });
+    this.props.queryUsers(this.props.user)
+    this.setState({ candidates: this.props });
   }
 
   onSwipeLeft(candidate) {
@@ -135,7 +130,7 @@ export default class SwipeView extends Component {
     const { user, candidates } = this.state;
     console.log(user);
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <Deck
           data={candidates}
           renderCard={this.renderNextCard}
@@ -170,12 +165,16 @@ export default class SwipeView extends Component {
             </TouchableOpacity>
           </View>
         : null }
-      </View>
+      </SafeAreaView>
     );
   }
 }
 
 const styles = {
+  container: {
+    flex: 1,
+    backgroundColor: "#fff"
+  },
   swipeButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -196,3 +195,23 @@ const styles = {
     height: 70,
   }
 };
+
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      queryUsers: queryUsers
+    },
+    dispatch
+  );
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SwipeView);
