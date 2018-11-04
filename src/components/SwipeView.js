@@ -59,12 +59,12 @@ export default class SwipeView extends Component {
     this.setState({ candidates });
   }
 
-  onSwipeLeft() {
+  onSwipeLeft(candidate) {
     // TODO: update database
     this.updateList();
   }
 
-  onSwipeRight() {
+  onSwipeRight(candidate) {
     // TODO: update database
     this.updateList();
   }
