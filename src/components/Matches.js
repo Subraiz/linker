@@ -5,10 +5,15 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
-  Image
+  Image,
+  UIManager,
+  LayoutAnimation,
+  WebView,
+  Linking
 } from "react-native";
+import { Actions } from "react-native-router-flux";
 import { connect } from "react-redux";
-import { Avatar } from "react-native-elements";
+import { Avatar, Icon } from "react-native-elements";
 import { bindActionCreators } from "redux";
 import { fetchLatestUser, fetchMatches } from "../actions/MatchActions";
 
@@ -21,7 +26,7 @@ const MatchView = props => {
       <View style={styles.matchCardStyle}>
         <View style={styles.imageContainer}>
           <Image
-            style={{ width: 66, height: 58 }}
+            style={{ width: 80, height: 80 }}
             source={{
               uri:
                 props.image ||
@@ -34,16 +39,25 @@ const MatchView = props => {
           <Text style={styles.fontStyle}>{props.school}</Text>
           <Text style={styles.fontStyle}>{props.major}</Text>
         </View>
-        <View style={styles.moreInfo}>
-          <Text style={styles.moreInfoText}>></Text>
-        </View>
+        <TouchableOpacity
+          style={styles.moreInfo}
+          onPress={() => {
+            Actions.MainWebView({ website: props.address });
+          }}
+        >
+          <View style={styles.moreInfo}>
+            <Image
+              style={{ width: 30, height: 30 }}
+              source={require("../images/arrow.png")}
+            />
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
 };
 
 class Matches extends Component {
-  count;
   componentWillMount() {
     count = 1;
     this.props.fetchLatestUser(this.props.currentUser);
@@ -54,6 +68,14 @@ class Matches extends Component {
       this.props.fetchMatches(this.props.user);
       count = count - 1;
     }
+
+    UIManager.setLayoutAnimationEnabledExperimental &&
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    LayoutAnimation.spring();
+  }
+
+  openWebsite(website) {
+    console.log(website);
   }
 
   renderMatches() {
@@ -68,6 +90,7 @@ class Matches extends Component {
         return (
           <View key={match.uid}>
             <MatchView
+              address={match.companyAddress}
               image={image}
               name={match.name}
               school={match.school || match.companyName}
@@ -115,6 +138,7 @@ const styles = {
   matchCardStyle: {
     alignSelf: "center",
     display: "flex",
+    justifyContent: "space-between",
     flexDirection: "row",
     backgroundColor: "rgba(255,255,255,.4)",
     borderTopWidth: 0.5,
@@ -122,8 +146,8 @@ const styles = {
     borderColor: "rgba(0,0,0,.3)",
     marignTop: 5,
     marginBottom: 10,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 15,
+    paddingRight: 15,
     width: screeWidth * 0.95,
     height: screenHeight * 0.15
   },
@@ -132,11 +156,11 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
-    alignItems: "space-between"
+    alignItems: "center"
   },
   fontStyle: {
     fontSize: 20,
-    textAlign: "left"
+    textAlign: "center"
   },
   imageContainer: {
     display: "flex",
