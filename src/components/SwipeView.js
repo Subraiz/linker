@@ -6,68 +6,96 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { queryUsers } from "../actions/DeckActions";
 
-const DATA = [
-  {
-    id: 1,
-    text: "Thair Brown",
-    major: "Economcis & Computer Science",
-    uri:
-      "https://media.licdn.com/dms/image/C5603AQG36a9Pawjo8w/profile-displayphoto-shrink_800_800/0?e=1545264000&v=beta&t=yC3YctzMRFevKXHJ7SHF_4rBjK1iWr4O6BRaygm-NYc"
-  },
-  {
-    id: 2,
-    text: "Subraiz Ahmed",
-    major: "Computer Science & Economics",
-    uri:
-      "https://pbs.twimg.com/profile_images/963415542290898944/8nMSf6ib_400x400.jpg"
-  },
-  {
-    id: 3,
-    text: "Card #3",
-    major: "",
-    uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-09.jpg"
-  },
-  {
-    id: 4,
-    text: "Card #4",
-    major: "",
-    uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-01.jpg"
-  },
-  {
-    id: 5,
-    text: "Card #5",
-    major: "",
-    uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-04.jpg"
-  },
-  {
-    id: 6,
-    text: "Card #6",
-    major: "",
-    uri: "http://www.fluxdigital.co/wp-content/uploads/2015/04/Unsplash.jpg"
-  },
-  {
-    id: 7,
-    text: "Card #7",
-    major: "",
-    uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-09.jpg"
-  },
-  {
-    id: 8,
-    text: "Card #8",
-    major: "",
-    uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-01.jpg"
-  }
-];
+import { Actions } from "react-native-router-flux";
+import { Text, View, TouchableOpacity } from "../common/shared-components";
+import { Database } from "../models/Database";
+import md5 from "react-native-md5";
 
-class SwipeView extends React.Component {
-  renderCard(item) {
+export default class SwipeView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      candidates: [],
+    };
+
+    if (this.props.user.userType && this.props.user.userType == USER.STUDENT) {
+      this.getNextCandidate = () => {
+        return Database.getNextRecruiter();
+      };
+      this.renderNextCard = (candidate) => {
+        return this.renderRecruiterCard(candidate);
+      };
+    } else {
+      this.getNextCandidate = () => {
+        return Database.getNextStudent();
+      };
+      this.renderNextCard = (candidate) => {
+        return this.renderStudentCard(candidate);
+      };
+    }
+
+    this.renderNextCard = this.renderNextCard.bind(this);
+    this.getNextCandidate = this.getNextCandidate.bind(this);
+    this.setNextCandidate = this.setNextCandidate.bind(this);
+
+    this.updateList = this.updateList.bind(this);
+    this.onSwipeLeft = this.onSwipeLeft.bind(this);
+    this.onSwipeRight = this.onSwipeRight.bind(this);
+  }
+
+  setNextCandidate(candidate) {
+    let { candidates } = this.state.candidates;
+    candidates.push(candidate);
+    this.setState({ candidates });
+  }
+
+  componentDidMount() {
+    this.props.queryUsers(this.props.user)
+    this.setState({ candidates: this.props });
+  }
+
+  onSwipeLeft(candidate) {
+    // TODO: update database
+    this.updateList();
+  }
+
+  onSwipeRight(candidate) {
+    // TODO: update database
+    this.updateList();
+  }
+
+  updateList() {
+    let { candidates } = this.state;
+    const nextCandidate = this.getNextCandidate();
+    if (!nextCandidate) {
+      // render last card view
+    } else {
+      candidates.push(nextCandidate);
+    }
+    candidates.shift();
+    this.setState({ candidates });
+  }
+
+  getGravatarUri(email) {
+    return "https://www.gravatar.com/avatar/" + md5.hex_md5(email.toLowerCase().trim()) + "?s=300";
+  }
+
+  renderStudentCard(candidate) {
     return (
-      <Card key={item.id} title={item.text} image={{ uri: item.uri }}>
-        <Text style={{ marginBottom: 10 }}>{item.major}</Text>
+      <Card
+        key={candidate.uid}
+        title={candidate.name}
+        image={{ uri: this.getGravatarUri(candidate.email) }}
+        imageStyle={{ height: 400 }}
+      >
+        <Text style={{ marginBottom: 10 }}>
+          School: {candidate.school}
+          Major: {candidate.major}
+        </Text>
         <Button
           icon={{ name: "assignment" }}
           backgroundColor="#03A9F4"
-          title="View Resume"
+          title="View More"
         />
       </Card>
     );
@@ -86,13 +114,23 @@ class SwipeView extends React.Component {
     );
   }
 
+  renderRecruiterCard(candidate) {
+    return (
+      <Text>{candidate.name}</Text>
+    );
+  }
+
   render() {
+    const { user, candidates } = this.state;
+    console.log(user);
     return (
       <SafeAreaView style={styles.container}>
         <Deck
-          data={DATA}
-          renderCard={this.renderCard}
+          data={candidates}
+          renderCard={this.renderNextCard}
           renderNoMoreCards={this.renderNoMoreCards}
+          onSwipeLeft={this.onSwipeLeft}
+          onSwipeRight={this.onSwipeRight}
         />
       </SafeAreaView>
     );
@@ -115,13 +153,12 @@ const mapDispatchToProps = dispatch => {
 };
 
 const styles = {
-  container: {
-    flex: 1,
-    backgroundColor: "#fff"
-  }
-};
 
+<<<<<<< HEAD
 export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(SwipeView);
+=======
+};
+>>>>>>> 1b719f759aa6a7e1422847163ae2380e64e9609e

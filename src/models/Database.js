@@ -1,6 +1,8 @@
 import Student from "./Student";
 import Recruiter from "./Recruiter";
 
+let i = 0;
+
 export const Database = {
   getNextRecruiter: (student) => {
     // TODO
@@ -9,8 +11,8 @@ export const Database = {
 
   getNextStudent: (recruiter) => {
     // TODO
-    console.log("get next");
-    let student = new Student("123abc", "David Shen S", "davi@d-shen.xyz", "6178637436", "IMAGE", "Boston College", "Computer Science", 3.8, "I'm a student", "None");
+    if (i == 15) return null;
+    let student = new Student("123abc" + i, "David Shen S" + (i++), "davi@d-shen.xyz", "6178637436", "IMAGE", "Boston College", "Computer Science", 3.8, "I'm a student", "None");
     return student;
   }
 }
