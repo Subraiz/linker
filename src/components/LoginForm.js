@@ -5,11 +5,11 @@ import { Actions } from "react-native-router-flux";
 import {
   FormLabel,
   FormInput,
-  FormValidationMessage
+  FormValidationMessage,
+  TouchableOpacity
 } from "react-native-elements";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { TouchableOpacity } from "../common/shared-components";
 import { logInUser, updateLoginInfo } from "../actions/LoginActions";
 
 class LoginForm extends Component {

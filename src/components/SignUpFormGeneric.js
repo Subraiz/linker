@@ -4,15 +4,20 @@ import { Actions } from "react-native-router-flux";
 import {
   FormLabel,
   FormInput,
-  FormValidationMessage
+  FormValidationMessage,
+  TouchableOpacity,
 } from "react-native-elements";
-import { TouchableOpacity } from "../common/shared-components";
+import Error from "../common/Error";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { updateUser } from "../actions/LoginActions";
 import * as USER from "../models/UserTypes";
 
 class SignUpFormGeneric extends Component {
+  state = {
+    errors: {}
+  };
+
   componentDidUpdate() {
     UIManager.setLayoutAnimationEnabledExperimental &&
       UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -20,16 +25,42 @@ class SignUpFormGeneric extends Component {
   }
 
   selectButton = index => {
-    if (index == 0) {
-      this.props.updateUser({ prop: "userType", value: USER.STUDENT });
-      Actions.SignUpFormStudent();
+    let errors = {};
+    let errored = false;
+    
+    if (!this.props.name || this.props.name.length < 4) {
+      errors.name = "Please provid ea valid name!";
+      errored = true;
+    }
+    
+    if (!this.props.email || this.props.email.length < 6) {
+      errors.email = "Please provide a valid email!";
+      errored = true;
+    }
+    
+    if (!this.props.password) {
+      errors.password = "Please provide a password!";
+      errored = true;
+    } else if (this.props.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long!";
+      errored = true;
+    }
+
+    if (errored) {
+      this.setState({ errors });
     } else {
-      this.props.updateUser({ prop: "userType", value: USER.RECRUITER });
-      Actions.SignUpFormRecruiter();
+      if (index == 0) {
+        this.props.updateUser({ prop: "userType", value: USER.STUDENT });
+        Actions.SignUpFormStudent();
+      } else {
+        this.props.updateUser({ prop: "userType", value: USER.RECRUITER });
+        Actions.SignUpFormRecruiter();
+      }
     }
   };
 
   render() {
+    const { errors } = this.state;
     return (
       <View>
         <FormLabel>Name</FormLabel>
@@ -38,12 +69,14 @@ class SignUpFormGeneric extends Component {
             this.props.updateUser({ prop: "name", value: text });
           }}
         />
+        <Error value={errors.name} />
         <FormLabel>Email</FormLabel>
         <FormInput
           onChangeText={text => {
             this.props.updateUser({ prop: "email", value: text });
           }}
         />
+        <Error value={errors.email} />
         <FormLabel>Password</FormLabel>
         <FormInput
           secureTextEntry
@@ -51,6 +84,7 @@ class SignUpFormGeneric extends Component {
             this.props.updateUser({ prop: "password", value: text });
           }}
         />
+        <Error value={errors.password} />
         <View style={styles.selectMessageContainer}>
           <Text style={styles.selectMessage}>I am a...</Text>
         </View>

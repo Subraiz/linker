@@ -7,10 +7,15 @@ import { bindActionCreators } from "redux";
 import { queryUsers } from "../actions/DeckActions";
 
 import { Actions } from "react-native-router-flux";
-import { Text, View, TouchableOpacity } from "../common/shared-components";
 import { Database } from "../models/Database";
 
-import { Image, Dimensions } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+} from "react-native";
 
 import thumbs_up from "../assets/thumbs_up.png";
 import thumbs_down from "../assets/thumbs_down.png";

@@ -5,7 +5,7 @@ import {
   View,
   Text,
   TouchableOpacity,
-} from "../common/shared-components";
+} from "react-native";
 import { Dimensions } from "react-native";
 
 const screeWidth = Dimensions.get("window").width;
