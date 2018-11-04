@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 import {
-  ScrollView,
   View,
   Text,
   Image,
@@ -12,15 +11,9 @@ import Recruiter, { createFromObject } from "../models/Recruiter";
 
 export default class RecruiterProfileView extends Component {
   render() {
-    console.log("AAAA");
     const { showMore, toggleShowMore } = this.props;
-    console.log(">>>>>>>");
-    console.log(this.props.profile);
     const profile = createFromObject(this.props.profile);
     if (!profile) return null;
-    console.log(profile);
-    console.log("<<<<<<<");
-    let DynamicView = showMore ? ScrollView : ScrollView;
     return (
       <View style={styles.container}>
         <Card

@@ -71,7 +71,7 @@ export const logInUser = (email, password) => {
     firestore.collection(userType).doc(uid).onSnapshot(doc => {
       console.log("USER UPDATE");
       let user = doc.data();
-      dispatch({ type: T.USER_INFORMATION_UPDATE, payload: user });
+      dispatch({ type: T.SAVE_USER_INFORMATION, payload: user });
 
       firestore.collection((userType === "Recruiters") ? "Students" : "Recruiters").get().then(snapshot => {
         updateList(user, snapshot, dispatch);

@@ -50,16 +50,13 @@ class SwipeView extends Component {
   }
 
   componentWillMount() {
-    this.getMatches();
     this.props.queryUsers(this.props.user);
+    this.getMatches();
   }
 
   componentDidUpdate() {
-    this.getMatches();
-  }
-
-  componentWillUpdate() {
-    this.getMatches();
+    // this.getMatches();
+    //this.props.queryUsers(this.state.currentUser);
   }
 
   onSwipeRight(candidate) {
@@ -81,7 +78,7 @@ class SwipeView extends Component {
   }
 
   rightButtonHelper() {
-    console.log("Go to matches");
+    Actions.Matches({ currentUser: this.state.currentUser });
   }
 
   leftButtonHelper() {
@@ -161,7 +158,7 @@ class SwipeView extends Component {
             }}
             rightComponent={{
               icon: "message",
-              onPress: this.rightButtonHelper,
+              onPress: this.rightButtonHelper.bind(this),
               color: "#fff"
             }}
           />

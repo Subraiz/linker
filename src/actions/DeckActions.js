@@ -101,7 +101,7 @@ export const updateList = (user, snapshot, dispatch) => {
 }
 
 export const queryUsers = user => {
-  console.log("Getting list ready");
+  console.log("Running the query");
   const auth = firebase.auth();
   const firestore = firebase.firestore();
   firestore.settings({ timestampsInSnapshots: true });
@@ -115,6 +115,59 @@ export const queryUsers = user => {
       firestore.collection("Students").onSnapshot(snapshot => {
         updateList(user, snapshot, dispatch);
       });
+      // =======
+      //   let list = [];
+      //   let candidate;
+      //   let updatedUser;
+      // 
+      //   return async dispatch => {
+      //     await firestore
+      //       .collection(user.userType)
+      //       .doc(user.uid)
+      //       .get()
+      //       .then(object => {
+      //         updatedUser = object.data();
+      //         console.log("New me:", updatedUser);
+      //       });
+      // 
+      //     console.log("new Me", updatedUser);
+      // 
+      //     if (user.userType == "Students") {
+      //       firestore
+      //         .collection("Recruiters")
+      //         .get()
+      //         .then(snapshot => {
+      //           snapshot.forEach(doc => {
+      //             candidate = doc.data();
+      //             if (
+      //               !updatedUser.liked.includes(candidate.uid) &&
+      //               !updatedUser.disliked.includes(candidate.uid)
+      //             ) {
+      //               console.log("You should be here", candidate.name);
+      //               list.push(candidate);
+      //             }
+      //           });
+      //           dispatch({ type: T.FETCH_USERS_SUCCESS, payload: list });
+      //         });
+      //     } else {
+      //       firestore
+      //         .collection("Students")
+      //         .get()
+      //         .then(snapshot => {
+      //           snapshot.forEach(doc => {
+      //             candidate = doc.data();
+      //             if (
+      //               !updatedUser.liked.includes(candidate.uid) &&
+      //               !updatedUser.disliked.includes(candidate.uid)
+      //             ) {
+      //               console.log("You don't belong here", candidate.name);
+      //             } else {
+      //               list.push(candidate.uid);
+      //             }
+      //           });
+      //           dispatch({ type: T.FETCH_USERS_SUCCESS, payload: list });
+      //         });
+      // >>>>>>> 0cd5706727aceb5d7594ed7a3de308c3d836de71
     }
   };
 };
