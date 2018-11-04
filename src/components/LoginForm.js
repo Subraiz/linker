@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import { Text, View, Switch } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 import { Spinner } from "native-base";
 import { Actions } from "react-native-router-flux";
 import {
   FormLabel,
   FormInput,
-  FormValidationMessage,
-  TouchableOpacity
+  FormValidationMessage
 } from "react-native-elements";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -21,7 +20,7 @@ class LoginForm extends Component {
     if (this.props.error) {
       return (
         <FormValidationMessage>
-          Error Logging In - Please Try Again{" "}
+          Error Logging In - Please Try Again
         </FormValidationMessage>
       );
     }
@@ -46,7 +45,10 @@ class LoginForm extends Component {
         <FormInput
           value={this.props.email}
           onChangeText={text => {
-            this.props.updateLoginInfo({ prop: "email", value: text });
+            this.props.updateLoginInfo({
+              prop: "email",
+              value: "test@test.com"
+            });
           }}
         />
         <FormLabel>Password</FormLabel>
@@ -54,7 +56,10 @@ class LoginForm extends Component {
           value={this.props.password}
           secureTextEntry
           onChangeText={text => {
-            this.props.updateLoginInfo({ prop: "password", value: text });
+            this.props.updateLoginInfo({
+              prop: "password",
+              value: "123456"
+            });
           }}
         />
         {this.renderErrorMessage()}
@@ -92,14 +97,18 @@ const styles = {
     margin: 5
   },
   button: {
-    width: "50%",
+    flex: 1,
     alignItems: "center",
     margin: 5,
-    padding: 30,
-    backgroundColor: "#fff"
+    padding: 15,
+    backgroundColor: "rgba(0,0,0,0)",
+    borderWidth: 1.5,
+    borderColor: "babyblue",
+    borderRadius: 6
   },
   buttonText: {
-    color: "#000"
+    color: "#000",
+    fontSize: 20
   },
   selectMessageContainer: {
     display: "flex",

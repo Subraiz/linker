@@ -35,8 +35,14 @@ class SignUpFormRecruiter extends Component {
   submitButton() {
     let errors = {};
     let errored = false;
-    
-    let fields = ["companyName", "companyAddress", "company", "industry", "description];
+
+    let fields = [
+      "companyName",
+      "companyAddress",
+      "company",
+      "industry",
+      "description"
+    ];
 
     fields.forEach(field => {
       if (!this.props[field] || this.props[field].length < 4) {
@@ -44,7 +50,7 @@ class SignUpFormRecruiter extends Component {
         errored = true;
       }
     });
-    
+
     if (errored) {
       this.setState({ errors });
     } else {

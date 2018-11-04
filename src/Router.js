@@ -6,13 +6,14 @@ import SwipeView from "./components/SwipeView";
 import SignUpFormGeneric from "./components/SignUpFormGeneric";
 import SignUpFormStudent from "./components/SignUpFormStudent";
 import SignUpFormRecruiter from "./components/SignUpFormRecruiter";
+import Settings from "./components/Settings";
 
 const RouterComponent = () => {
   return (
     <Router>
       <Scene key="root">
-        <Scene key="auth" hideNavBar>
-          <Scene key="Login" component={Login} initial hideNavBar />
+        <Scene key="auth" hideNavBar initial>
+          <Scene key="Login" component={Login} hideNavBar />
           <Scene
             key="SignUpFormGeneric"
             component={SignUpFormGeneric}
@@ -40,6 +41,12 @@ const RouterComponent = () => {
         </Scene>
         <Scene key="swipe" hideNavBar type={ActionConst.RESET}>
           <Scene key="SwipeView" component={SwipeView} />
+          <Scene
+            key="Settings"
+            component={Settings}
+            hideNavBar={false}
+            title="Prefrences"
+          />
         </Scene>
       </Scene>
     </Router>

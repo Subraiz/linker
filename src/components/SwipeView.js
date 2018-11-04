@@ -1,24 +1,34 @@
 import React, { Component } from "react";
-
-
+import firebase from "@firebase/app";
+require("firebase/auth");
 import Deck from "./Deck";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { queryUsers } from "../actions/DeckActions";
-
+import {
+  queryUsers,
+  onSwipeRight,
+  onSwipeLeft,
+  getMatches,
+  updateMatches
+} from "../actions/DeckActions";
 import { Actions } from "react-native-router-flux";
-import { Database } from "../models/Database";
-
 import {
   Text,
   View,
   TouchableOpacity,
   Image,
   Dimensions,
+  SafeAreaView
 } from "react-native";
+import { Card, Button, Header } from "react-native-elements";
+import StudentProfileView from "./StudentProfileView";
+import RecruiterProfileView from "./RecruiterProfileView";
 
 import thumbs_up from "../assets/thumbs_up.png";
 import thumbs_down from "../assets/thumbs_down.png";
+
+import Student from "../models/Student";
+import Recruiter, { createFromObject } from "../models/Recruiter";
 
 const screeWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -26,140 +36,165 @@ const screenHeight = Dimensions.get("window").height;
 class SwipeView extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
       candidates: [],
       forceSwipe: "",
       showMore: false,
     };
 
-    if (this.props.user.userType && this.props.user.userType == USER.STUDENT) {
-      this.getNextCandidate = () => {
-        return Database.getNextRecruiter();
-      };
-      this.renderNextCard = (candidate) => {
-        return this.renderRecruiterCard(candidate);
-      };
-    } else {
-      this.getNextCandidate = () => {
-        return Database.getNextStudent();
-      };
-      this.renderNextCard = (candidate) => {
-        return this.renderStudentCard(candidate);
-      };
-    }
-
-    this.renderNextCard = this.renderNextCard.bind(this);
-    this.getNextCandidate = this.getNextCandidate.bind(this);
-    this.setNextCandidate = this.setNextCandidate.bind(this);
-
-    this.updateList = this.updateList.bind(this);
+    this.renderCard = this.renderCard.bind(this);
     this.onSwipeLeft = this.onSwipeLeft.bind(this);
     this.onSwipeRight = this.onSwipeRight.bind(this);
     this.toggleShowMore = this.toggleShowMore.bind(this);
   }
 
-  setNextCandidate(candidate) {
-    let { candidates } = this.state.candidates;
-    candidates.push(candidate);
-    this.setState({ candidates });
+  componentWillMount() {
+    this.getMatches();
+    this.props.queryUsers(this.props.user);
   }
 
-  componentDidMount() {
-    this.props.queryUsers(this.props.user)
-    this.setState({ candidates: this.props });
+  componentDidUpdate() {
+    this.getMatches();
   }
 
-  onSwipeLeft(candidate) {
-    // TODO: update database
-    this.updateList();
+  componentWillUpdate() {
+    this.getMatches();
   }
 
   onSwipeRight(candidate) {
-    // TODO: update database
-    this.updateList();
+		this.props.list.shift();
+    this.props.onSwipeRight(this.props.user, candidate);
+    this.setState({ forceSwipe: "" });
+    //this.getMatches();
   }
 
-  updateList() {
-    let { candidates } = this.state;
-    const nextCandidate = this.getNextCandidate();
-    if (!nextCandidate) {
-      // render last card view
-    } else {
-      candidates.push(nextCandidate);
-    }
-    candidates.shift();
-    this.setState({ candidates, forceSwipe: "", showMore: false });
+  onSwipeLeft(candidate) {
+		this.props.list.shift();
+    this.props.onSwipeLeft(this.props.user, candidate);
+    this.setState({ forceSwipe: "" });
+    //this.getMatches();
   }
 
   toggleShowMore() {
-    this.setState({ showMore: !showMore });
+    this.setState({ showMore: !this.state.showMore });
   }
 
-  renderStudentCard(candidate) {
-    return (
-      <StudentProfileView proflie={candidate} showMore={this.state.showMore} toggleShowMore={this.toggleShowMore} />
-    );
+  rightButtonHelper() {
+    console.log("Go to matches");
+  }
+
+  leftButtonHelper() {
+    Actions.Settings();
   }
 
   renderNoMoreCards() {
-    console.log("All done");
     return (
-      <Card title={"All Done"}>
-        <Button
-          icon={{ name: "assignment" }}
-          backgroundColor="#03A9F4"
-          title="Get More"
-        />
-      </Card>
+      <View>
+        <Card title={"All Done"}>
+          <Button
+            onPress={this.getMatches}
+            icon={{ name: "refresh" }}
+            backgroundColor="#03A9F4"
+            title="Refresh"
+          />
+        </Card>
+      </View>
     );
   }
 
-  renderRecruiterCard(candidate) {
+  renderCard(user, isFront = false) {
+    // TODO: differentiate rendering between student and recruiter
+    console.log("RENDER");
+    console.log(user);
+    if (!user) return null;
     return (
-      <Text>{candidate.name}</Text>
+      <RecruiterProfileView profile={user} showMore={isFront && this.state.showMore} toggleShowMore={this.toggleShowMore} />
     );
+  }
+
+  async getMatches(resetStates = false) {
+    const auth = firebase.auth();
+    const firestore = firebase.firestore();
+    firestore.settings({ timestampsInSnapshots: true });
+
+    let matches = [];
+
+    let userType = "Students";
+    let currentUser = this.props.user;
+
+    if (currentUser.userType == "Students") {
+      userType = "Recruiters";
+    }
+    await firestore.collection(userType).onSnapshot(snapshot => {
+      snapshot.forEach(doc => {
+        candidate = doc.data();
+        console.log(candidate.uid);
+        console.log(currentUser.liked);
+        if (
+          candidate.liked.includes(currentUser.uid) &&
+          currentUser.liked.includes(candidate.uid)
+        ) {
+          console.log("We have found a match");
+          matches.push(candidate);
+        }
+      });
+
+      console.log("These are the matches: ", matches);
+      this.props.updateMatches(currentUser, matches);
+    });
   }
 
   render() {
-    const { user, candidates } = this.state;
-    console.log(user);
     return (
       <SafeAreaView style={styles.container}>
+        <View>
+          <Header
+            leftComponent={{
+              icon: "settings",
+              color: "#fff",
+              onPress: this.leftButtonHelper
+            }}
+            centerComponent={{
+              text: "Linker",
+              style: { fontSize: 30, color: "#fff" }
+            }}
+            rightComponent={{
+              icon: "message",
+              onPress: this.rightButtonHelper,
+              color: "#fff"
+            }}
+          />
+        </View>
         <Deck
-          data={candidates}
-          renderCard={this.renderNextCard}
+          data={this.props.list}
+          renderCard={this.renderCard}
           renderNoMoreCards={this.renderNoMoreCards}
-          onSwipeLeft={this.onSwipeLeft}
-          onSwipeRight={this.onSwipeRight}
+          onSwipeRight={this.onSwipeRight.bind(this)}
+          onSwipeLeft={this.onSwipeLeft.bind(this)}
           forceSwipe={this.state.forceSwipe}
           showMore={this.state.showMore}
         />
-        { candidates.length > 0 && !this.state.showMore ?
+        { this.props.list.length > 0 && !this.state.showMore ? (
           <View style={styles.swipeButtons}>
             <TouchableOpacity
               onPress={() => {
                 this.setState({ forceSwipe: "left" });
               }}
-                style={[styles.swipeButton, {paddingTop: 7, paddingBottom: 3}]}
+              style={[styles.swipeButton, { paddingTop: 7, paddingBottom: 3 }]}
             >
-              <Image
-                source={thumbs_down}
-                style={styles.buttonImage}
-              />
+              <Image source={thumbs_down} style={styles.buttonImage} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 this.setState({ forceSwipe: "right" });
               }}
-              style={[styles.swipeButton, {paddingTop: 3, paddingBottom: 7}]}
+              style={[styles.swipeButton, { paddingTop: 3, paddingBottom: 7 }]}
             >
-              <Image
-                source={thumbs_up}
-                style={styles.buttonImage}
-              />
+              <Image source={thumbs_up} style={styles.buttonImage} />
             </TouchableOpacity>
           </View>
-        : null }
+        ) : null }
       </SafeAreaView>
     );
   }
@@ -173,34 +208,43 @@ const styles = {
   swipeButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    margin: 10,
-    marginTop: screenHeight - 100,
+    alignItems: "flex-end",
+    height: screenHeight,
+    position: "absolute",
+    width: screeWidth,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   swipeButton: {
     alignItems: "center",
     marign: 5,
     padding: 5,
-    backgroundColor: "#fff", 
+    backgroundColor: "#fff",
     borderWidth: 1,
-    borderRadius: 100,
+    borderRadius: 100
   },
   buttonImage: {
     width: 70,
-    height: 70,
+    height: 70
   }
 };
 
 const mapStateToProps = state => {
   return {
-    user: state.user
+    list: state.deck.list,
+    matches: state.deck.matches
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      queryUsers: queryUsers
+      queryUsers: queryUsers,
+      onSwipeRight: onSwipeRight,
+      onSwipeLeft: onSwipeLeft,
+      getMatches: getMatches,
+      updateMatches: updateMatches
     },
     dispatch
   );

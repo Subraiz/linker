@@ -5,15 +5,24 @@ import {
   Text,
   Image,
 } from "react-native";
+import { Card, Button } from "react-native-elements";
+
+import Student, { createFromObject } from "../models/Student";
 
 export default class StudentProfileView extends Component {
   render() {
-    const { profile, showMore, toggleShowMore } = this.props;
+    const { showMore, toggleShowMore } = this.props;
+    console.log(">>>>>>>");
+    console.log(this.props.profile);
+    const profile = createFromObject(this.props.profile);
+    console.log(profile);
+    console.log("<<<<<<<");
     return (
       <View style={styles.container}>
         <Card
-          key={candidate.getUid()}
-          image={{ uri: candidate.getImage() }}
+          key={profile.getUid()}
+          image={{ uri: profile.getImage() }}
+          title={profile.getName()}
           imageStyle={{ height: 400 }}
         >
           <View style={styles.quickInfo}>
@@ -26,22 +35,22 @@ export default class StudentProfileView extends Component {
             onPress={toggleShowMore}
             title={showMore ? "Hide" : "View More"}
           />
+          { showMore ? (
+            <View style={styles.longInfo}>
+              <Text style={styles.about}>
+                {profile.getAbout()}
+              </Text>
+              <View style={styles.row}>
+                <Text style={styles.key}>GPA</Text>
+                <Text style={styles.value}>{profile.getGPA()}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.key}>Skills</Text>
+                <Text style={styles.value}>{profile.getSkills()}</Text>
+              </View>
+            </View>
+          ) : null }
         </Card>
-        { showMore ? (
-          <View style={styles=longInfo}>
-            <Text style={styles.about}>
-              {styles.getAbout()}
-            </Text>
-            <View style={styles.row}>
-              <Text style={styles.key}>GPA</Text>
-              <Text style={styles.value}>{profile.getGPA()}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.key}>Skills</Text>
-              <Text style={styles.value}>{profile.getSkills()}</Text>
-            </View>
-          </View>
-        ) : null }
       </View>
     );
   }

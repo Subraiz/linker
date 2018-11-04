@@ -23,7 +23,7 @@ export default class Recruiter {
     this.companyName = companyName || "Some Company";
     this.companyAddress = companyAddress || "Some Address";
     this.industry = industry || "General";
-    this.companyDescription = this.companyDescription || "I am " + this.name + " and I am a recruiter from " + this.companyName + ", a company in the " + this.industry + " industry.";
+    this.companyDescription = companyDescription || "I am " + this.name + " and I am a recruiter from " + this.companyName + ", a company in the " + this.industry + " industry.";
     this.positionsAvailable = positionsAvailable || ["Employee"];
     this.liked = liked;
     this.disliked = disliked;
@@ -80,44 +80,45 @@ export default class Recruiter {
   disliked(uid) {
     this.disliked.push(uid);
   }
+}
 
-  toObject() {
-    return {
-      uid: this.getUid(),
-      name: this.getName(),
-      email: this.getEmail(),
-      phone: this.getPhone(),
-      image: this.getImage(),
-      companyName: this.getCompanyName(),
-      companyAddress: this.getCompanyAddress(),
-      companyDescription: this.getCompanyDescription(),
-      industry: this.getIndustry(),
-      positionsAvailable: this.getPositionsAvailable(),
-      liked: this.getLiked(),
-      disliked: this.getDisliked(),
-    };
+export const toObject = () => {
+  return {
+    uid: this.getUid(),
+    name: this.getName(),
+    email: this.getEmail(),
+    phone: this.getPhone(),
+    image: this.getImage(),
+    companyName: this.getCompanyName(),
+    companyAddress: this.getCompanyAddress(),
+    companyDescription: this.getCompanyDescription(),
+    industry: this.getIndustry(),
+    positionsAvailable: this.getPositionsAvailable(),
+    liked: this.getLiked(),
+    disliked: this.getDisliked(),
+  };
+}
+
+export const createFromObject = (recruiterObj) => {
+  if (!recruiterObj || !recruiterObj.uid) {
+    console.log("Invalid recruiter object!");
+    console.log(recruiterObj);
+    console.log(recruiterObj.uid);
+    return null;
   }
 
-  createFromObject(recruiterObj) {
-    if (!recruiterObj.uid) {
-      console.error("Invalid recruiter object!");
-      console.error(recruiterObj);
-      return null;
-    }
-
-    return new Recruiter(
-      recruiterObj.uid,
-      recruiterObj.name,
-      recruiterObj.email,
-      recruiterObj.phone,
-      recruiterObj.image,
-      recruiterObj.companyName,
-      recruiterObj.companyAddress,
-      recruiterObj.companyDescription,
-      recruiterObj.industry,
-      recruiterObj.positionsAvailable,
-      recruiterObj.liked,
-      recruiterObj.disliked
-    );
-  }
+  return new Recruiter(
+    recruiterObj.uid,
+    recruiterObj.name,
+    recruiterObj.email,
+    recruiterObj.phone,
+    recruiterObj.image,
+    recruiterObj.companyName,
+    recruiterObj.companyAddress,
+    recruiterObj.companyDescription,
+    recruiterObj.industry,
+    recruiterObj.positionsAvailable,
+    recruiterObj.liked,
+    recruiterObj.disliked
+  );
 }
